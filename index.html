@@ -62,52 +62,73 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 // ── DATA ─────────────────────────────────────────────
 const periods = [
   {id:1, name:"Рабовладельческий",      start:-1500, end:400,  pop:{min:110,max:200},  color:"#C0622F",
-   tech:[{icon:"α",  name:"Алфавит",         year:-1050}],
+   tech:[{icon:"α",  name:"Алфавит",         year:-1050, file:"alphabet.svg"}],
+   lit:{min:3,max:12},
    edu:{
-     institution:"Философские и жреческие школы",
-     knowledge_status:"Знание у элиты; степеней и корпораций нет"
+     institution:"Философские, риторические, храмовые и жреческие школы",
+     knowledge_status:"Знание у элиты (жрецы, философы, аристократия); систематическое обучение, но нет корпорации университета и учёных степеней",
+     avg_person:"Обучение труду в семье; устное ремесло, изредка — чтение",
+     elite:"Храмовые школы → Академия Платона, Ликей; платная риторика и философия"
    }},
   {id:2, name:"Феодальный",             start:400,   end:1400, pop:{min:250,max:350},  color:"#7B5EA7",
-   tech:[{icon:"☰",  name:"Книги",           year:400},
-         {icon:"⌂",  name:"Университет",     year:1088}],
+   tech:[{icon:"☰",  name:"Книги",           year:400,  file:"books.svg"},
+         {icon:"⌂",  name:"Университет",     year:1088, file:"campus.svg"}],
+   lit:{min:4,max:13},
    edu:{
-     institution:"Монастырские школы и ранние университеты",
-     knowledge_status:"Церковь хранит знание; ун-т — сословная корпорация"
+     institution:"Монастырские и соборные школы, ранние университеты (Болонья, Париж и др.)",
+     knowledge_status:"Церковь — главный носитель знания; университет возникает как корпорация учёных и студентов внутри сословного общества",
+     avg_person:"Церковное научение молитвам; цеховое ученичество",
+     elite:"Монастырское образование, trivium → университет: теология, право, медицина; диспуты"
    }},
   {id:3, name:"Абсолютизм",             start:1400,  end:1800, pop:{min:400,max:800},  color:"#2E86AB",
-   tech:[{icon:"⎙",  name:"Печатный станок", year:1440}],
+   tech:[{icon:"⎙",  name:"Печатный станок", year:1440, file:"printing-press.svg"}],
+   lit:{min:16,max:53},
    edu:{
-     institution:"Королевские университеты",
-     knowledge_status:"Чиновники и духовенство; контроль растёт, науки тоже"
+     institution:"Университеты под контролем монархии и церкви",
+     knowledge_status:"Университеты готовят чиновников и духовенство; усиливается государственный контроль, но растут светские дисциплины",
+     avg_person:"Приходские школы, Библия, счёт",
+     elite:"Гимназии, академии, переписка учёных, энциклопедисты"
    }},
   {id:4, name:"Индустриализм",          start:1600,  end:1900, pop:{min:800,max:1200}, color:"#1B998B",
-   tech:[{icon:"–·–",name:"Телеграф",        year:1837}],
+   tech:[{icon:"–·–",name:"Телеграф",        year:1837, file:"telegraph.svg"}],
+   lit:{min:40,max:70},
    edu:{
-     institution:"Исследовательский университет",
-     knowledge_status:"Наука + обучение; инженеры, врачи, учёные"
+     institution:"Классический (гумбольдтовский) исследовательский университет",
+     knowledge_status:"Университет совмещает науку и обучение, служит индустриальному обществу: подготовка инженеров, врачей, учёных, развитие фундаментальных исследований",
+     avg_person:"Массовые народные школы, обязательное начальное образование",
+     elite:"Университеты, научные общества, журналы"
    }},
   {id:5, name:"Империализм",            start:1870,  end:1914, pop:{min:1400,max:1600},color:"#E9C46A",
-   tech:[{icon:"☎",  name:"Телефон",         year:1876},
-         {icon:"◌◌◌",name:"Радио",           year:1895}],
+   tech:[{icon:"☎",  name:"Телефон",         year:1876, file:"telephone.svg"},
+         {icon:"◌◌◌",name:"Радио",           year:1895, file:"radio.svg"}],
+   lit:{min:70,max:90},
    edu:{
-     institution:"Национальные университеты",
-     knowledge_status:"Служат империям; идеология усиливается"
+     institution:"Крупные национальные университеты, технические вузы, колониальные и метропольные центры",
+     knowledge_status:"Университеты обслуживают нужды империй (армия, администрация, наука для промышленности и военной сферы); усиливается национальная и идеологическая функция",
+     avg_person:"Обязательная школа 4–8 лет, учебники",
+     elite:"Университет + специализация, научные лаборатории"
    }},
   {id:6, name:"Капитализм",             start:1914,  end:2026, pop:{min:1600,max:8000},color:"#E76F51",
-   tech:[{icon:"▣",  name:"Телевидение",     year:1926},
-         {icon:"⊡",  name:"Компьютер",       year:1946},
-         {icon:"◎",  name:"Интернет",        year:1969}],
+   tech:[{icon:"▣",  name:"Телевидение",     year:1926, file:"tv.svg"},
+         {icon:"⊡",  name:"Компьютер",       year:1946, file:"computer.svg"},
+         {icon:"◎",  name:"Интернет",        year:1969, file:"internet.svg"}],
+   lit:{min:90,max:99},
    edu:{
-     institution:"Предпринимательский университет",
-     knowledge_status:"Рынок: конкуренция, платность, прикладные цели"
+     institution:"Массовый, предпринимательский университет, частные вузы",
+     knowledge_status:"Университет всё больше зависит от рынка труда и капитала: массовое высшее образование, конкуренция, платные услуги, ориентация на эффективность и прикладные исследования",
+     avg_person:"Всеобщее среднее образование, стандартные программы",
+     elite:"Аспирантура, академические институты, научные сети"
    }},
   {id:7, name:"Информационное общество",start:1970,  end:2026, pop:{min:6000,max:8100},color:"#06D6A0",
-   tech:[{icon:"⬡",  name:"Соцсети",         year:2004},
-         {icon:"▯",  name:"Смартфон",        year:2007},
-         {icon:"◈",  name:"ИИ",              year:2022}],
+   tech:[{icon:"⬡",  name:"Соцсети",         year:2004, file:"social-network.svg"},
+         {icon:"▯",  name:"Смартфон",        year:2007, file:"smartphones.svg"},
+         {icon:"◈",  name:"ИИ",              year:2022, file:"ai.svg"}],
+   lit:{min:84,max:88},
    edu:{
-     institution:"?",
-     knowledge_status:"?"
+     institution:"Как должен быть устроен ВУЗ?",
+     knowledge_status:"Что значит качественное знание? Какая цель образования?",
+     avg_person:"?",
+     elite:"?"
    }},
 ];
 
@@ -157,7 +178,7 @@ function applyMorph(t){
   });
   mRowLabels.forEach(l=>l.setAttribute('fill-opacity', lerp(0, 0.3, t)));
   mRowBorders.forEach(b=>b.setAttribute('opacity', lerp(0, 1, t)));
-  mColTechs.forEach(c=>c.el.setAttribute('fill-opacity', lerp(0, c.tfo, t)));
+  mColTechs.forEach(c=>c.el.setAttribute(c.attr||'fill-opacity', lerp(0, c.tfo, t)));
 }
 
 // ── NAVIGATION ───────────────────────────────────────
@@ -263,19 +284,26 @@ function render(){
   const COL_W=W/N;
   const COL_PAD=10;
   const innerW=COL_W-COL_PAD*2;
-  const INST_FS=Math.min(Math.max(COL_W*0.068,13),18), INST_LINE_H=INST_FS*1.4;
-  const KNOW_FS=Math.min(Math.max(COL_W*0.068,13),18), KNOW_LINE_H=KNOW_FS*1.4;
-  const TEXT_FS=9, CR=0.58, LINE_H=13, CELL_PAD_V=7, ROW_LABEL_H=15;
-  const INST_LABEL_H=22, KNOW_LABEL_H=22;
-  const NAME_ZONE_H=62;
+  const INST_FS=Math.min(Math.max(COL_W*0.060,11),15), INST_LINE_H=INST_FS*1.4;
+  const KNOW_FS=Math.min(Math.max(COL_W*0.060,11),15), KNOW_LINE_H=KNOW_FS*1.4;
+  const AVG_FS =Math.min(Math.max(COL_W*0.056,10),13), AVG_LINE_H =AVG_FS*1.4;
+  const ELITE_FS=Math.min(Math.max(COL_W*0.056,10),13), ELITE_LINE_H=ELITE_FS*1.4;
+  const TEXT_FS=9, CR=0.58, LINE_H=13, CELL_PAD_V=6, ROW_LABEL_H=15;
+  const INST_LABEL_H=20, KNOW_LABEL_H=20, AVG_LABEL_H=18, ELITE_LABEL_H=18;
+  const NAME_ZONE_H=54;
 
-  const instMaxLines=Math.max(...periods.map(p=>wrapText(p.edu.institution,innerW,INST_FS,CR).length));
-  const knowMaxLines=Math.max(...periods.map(p=>wrapText(p.edu.knowledge_status,innerW,KNOW_FS,CR).length));
+  const instMaxLines =Math.max(...periods.map(p=>wrapText(p.edu.institution,     innerW,INST_FS, CR).length));
+  const knowMaxLines =Math.max(...periods.map(p=>wrapText(p.edu.knowledge_status,innerW,KNOW_FS, CR).length));
+  const avgMaxLines  =Math.max(...periods.map(p=>wrapText(p.edu.avg_person,      innerW,AVG_FS,  CR).length));
+  const eliteMaxLines=Math.max(...periods.map(p=>wrapText(p.edu.elite,           innerW,ELITE_FS,CR).length));
 
-  const INST_ROW_H=INST_LABEL_H+Math.ceil(instMaxLines)*INST_LINE_H+CELL_PAD_V*2;
-  const KNOW_ROW_H=KNOW_LABEL_H+Math.ceil(knowMaxLines)*KNOW_LINE_H+CELL_PAD_V*2;
-  const POP_ROW_H=30;
-  const TABLE_H=NAME_ZONE_H+INST_ROW_H+KNOW_ROW_H+POP_ROW_H;
+  const INST_ROW_H =INST_LABEL_H +Math.ceil(instMaxLines) *INST_LINE_H +CELL_PAD_V*2;
+  const KNOW_ROW_H =KNOW_LABEL_H +Math.ceil(knowMaxLines) *KNOW_LINE_H +CELL_PAD_V*2;
+  const AVG_ROW_H  =AVG_LABEL_H  +Math.ceil(avgMaxLines)  *AVG_LINE_H  +CELL_PAD_V*2;
+  const ELITE_ROW_H=ELITE_LABEL_H+Math.ceil(eliteMaxLines)*ELITE_LINE_H+CELL_PAD_V*2;
+  const POP_ROW_H=28;
+  const LIT_ZONE_H=110;
+  const TABLE_H=NAME_ZONE_H+INST_ROW_H+KNOW_ROW_H+AVG_ROW_H+ELITE_ROW_H+POP_ROW_H;
 
   // Y positions for period name + pop value in columns view
   const cxNameY=NAME_ZONE_H*0.60; // near very top
@@ -302,6 +330,25 @@ function render(){
   const s2=document.createElementNS(ns,'stop');
   s2.setAttribute('offset','100%'); s2.setAttribute('stop-color','#06070F'); s2.setAttribute('stop-opacity','0.6');
   lg.appendChild(s1); lg.appendChild(s2); defs.appendChild(lg);
+
+  // Tint filters per period color (recolor black-silhouette SVGs)
+  periods.forEach((p,i)=>{
+    const flt=document.createElementNS(ns,'filter');
+    flt.setAttribute('id',`tint${i}`);
+    flt.setAttribute('x','0'); flt.setAttribute('y','0');
+    flt.setAttribute('width','1'); flt.setAttribute('height','1');
+    const fld=document.createElementNS(ns,'feFlood');
+    fld.setAttribute('flood-color',p.color);
+    fld.setAttribute('flood-opacity','1');
+    fld.setAttribute('result','flood');
+    const cmp=document.createElementNS(ns,'feComposite');
+    cmp.setAttribute('in','flood');
+    cmp.setAttribute('in2','SourceGraphic');
+    cmp.setAttribute('operator','in');
+    flt.appendChild(fld); flt.appendChild(cmp);
+    defs.appendChild(flt);
+  });
+
   svg.appendChild(defs);
 
   // ── PERIOD ROWS ──────────────────────────────────────
@@ -371,30 +418,38 @@ function render(){
       stroke:'rgba(255,255,255,0.07)','stroke-width':1,opacity:0});
     svg.appendChild(divider);
 
-    // Tech tags (timeline only)
-    const TECH_FS=9,TECH_LINE=13;
+    // Tech icons (timeline only) — horizontal row
+    const TECH_ICON=Math.min(BAR_H*1.05, 26);
+    const TECH_GAP=4;
+    const techRowW=p.tech.length*TECH_ICON+(p.tech.length-1)*TECH_GAP;
+    const techY=barY+BAR_H/2-TECH_ICON/2;
+    let techStartX;
     if(p.id===1){
-      const tx=x1+dispBarW+12;
-      p.tech.forEach((t,ti)=>{
-        const ty=barY+(BAR_H/2)+(ti-(p.tech.length-1)/2)*TECH_LINE+3;
-        const tEl=el(ns,'text',{x:tx,y:ty,'text-anchor':'start',
-          'font-family':'DM Mono,monospace','font-size':TECH_FS,
-          fill:p.color,'fill-opacity':0.48});
-        tEl.textContent=`${t.icon}  ${t.name}  ${fmtYear(t.year)}`;
-        svg.appendChild(tEl); mFadeOut.push(tEl);
-      });
+      techStartX=x1+dispBarW+12;
     } else {
       const nameLeftEdge=fitsInside?x1:(txNx-estTextW);
-      const techRightX=nameLeftEdge-18;
-      p.tech.forEach((t,ti)=>{
-        const ty=barY+(BAR_H/2)+(ti-(p.tech.length-1)/2)*TECH_LINE+3;
-        const tEl=el(ns,'text',{x:techRightX,y:ty,'text-anchor':'end',
-          'font-family':'DM Mono,monospace','font-size':TECH_FS,
-          fill:p.color,'fill-opacity':0.48});
-        tEl.textContent=`${fmtYear(t.year)}  ${t.name}  ${t.icon}`;
-        svg.appendChild(tEl); mFadeOut.push(tEl);
-      });
+      techStartX=nameLeftEdge-18-techRowW;
     }
+    p.tech.forEach((t,ti)=>{
+      const ix=techStartX+ti*(TECH_ICON+TECH_GAP);
+      if(t.file){
+        const img=el(ns,'image',{
+          x:ix, y:techY, width:TECH_ICON, height:TECH_ICON,
+          href:`icons/${t.file}`,
+          preserveAspectRatio:'xMidYMin slice',
+          filter:`url(#tint${i})`,
+          opacity:0.85
+        });
+        img.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href',`icons/${t.file}`);
+        svg.appendChild(img); mFadeOut.push(img);
+      } else {
+        const tEl=el(ns,'text',{x:ix+TECH_ICON/2, y:techY+TECH_ICON*0.78,
+          'text-anchor':'middle','font-family':'DM Mono,monospace',
+          'font-size':TECH_ICON*0.7,fill:p.color,'fill-opacity':0.7});
+        tEl.textContent=t.icon;
+        svg.appendChild(tEl); mFadeOut.push(tEl);
+      }
+    });
 
     mPeriods.push({
       rect,topEdge,nameEl,divider,
@@ -500,28 +555,36 @@ function render(){
     stroke:'rgba(255,255,255,0.1)','stroke-width':1});
   svg.appendChild(baseline); mFadeOut.push(baseline);
 
-  // ── TABLE (columns mode, 3 rows at top) ──────────────
-  // Row definitions: [field, label, rowY, rowH, fill-opacity, text-opacity]
+  // ── TABLE (columns mode, 5 rows at top) ──────────────
+  const rowY_INST  =NAME_ZONE_H;
+  const rowY_KNOW  =rowY_INST +INST_ROW_H;
+  const rowY_AVG   =rowY_KNOW +KNOW_ROW_H;
+  const rowY_ELITE =rowY_AVG  +AVG_ROW_H;
+  const rowY_POP   =rowY_ELITE+ELITE_ROW_H;
+
   const tableRows=[
-    {field:'institution',    label:'УЧЕБНЫЕ ЗАВЕДЕНИЯ', rowY:NAME_ZONE_H,                              rowH:INST_ROW_H, tfo:0.10, tto:0.78},
-    {field:'knowledge_status',label:'СТАТУС ЗНАНИЯ',   rowY:NAME_ZONE_H+INST_ROW_H,                  rowH:KNOW_ROW_H, tfo:0.07, tto:0.65},
-    {field:'population',     label:'НАСЕЛЕНИЕ',         rowY:NAME_ZONE_H+INST_ROW_H+KNOW_ROW_H,      rowH:POP_ROW_H,  tfo:0.14, tto:0.85},
+    {field:'institution',     label:'УЧЕБНЫЕ ЗАВЕДЕНИЯ', rowY:rowY_INST,  rowH:INST_ROW_H,  tfo:0.10, tto:0.80, fs:INST_FS,  lh:INST_LINE_H,  labelH:INST_LABEL_H},
+    {field:'knowledge_status',label:'СТАТУС ЗНАНИЯ',     rowY:rowY_KNOW,  rowH:KNOW_ROW_H,  tfo:0.07, tto:0.68, fs:KNOW_FS,  lh:KNOW_LINE_H,  labelH:KNOW_LABEL_H},
+    {field:'avg_person',      label:'МАССЫ',              rowY:rowY_AVG,   rowH:AVG_ROW_H,   tfo:0.05, tto:0.62, fs:AVG_FS,   lh:AVG_LINE_H,   labelH:AVG_LABEL_H},
+    {field:'elite',           label:'ЭЛИТА',              rowY:rowY_ELITE, rowH:ELITE_ROW_H, tfo:0.12, tto:0.78, fs:ELITE_FS, lh:ELITE_LINE_H, labelH:ELITE_LABEL_H},
+    {field:'population',      label:'НАСЕЛЕНИЕ',          rowY:rowY_POP,   rowH:POP_ROW_H,   tfo:0.16, tto:0.88},
   ];
 
   // Row horizontal borders
-  [NAME_ZONE_H, NAME_ZONE_H+INST_ROW_H, NAME_ZONE_H+INST_ROW_H+KNOW_ROW_H, TABLE_H].forEach((y,idx)=>{
+  [rowY_INST, rowY_KNOW, rowY_AVG, rowY_ELITE, rowY_POP, TABLE_H].forEach((y,idx,arr)=>{
+    const isOuter=idx===0||idx===arr.length-1;
     const bLine=el(ns,'line',{x1:0,y1:y,x2:W,y2:y,
-      stroke:idx===0||idx===3?'rgba(255,255,255,0.15)':'rgba(255,255,255,0.07)',
+      stroke:isOuter?'rgba(255,255,255,0.15)':'rgba(255,255,255,0.07)',
       'stroke-width':1,opacity:0});
     svg.appendChild(bLine); mRowBorders.push(bLine);
   });
 
   // Row labels (left side of each row)
   tableRows.forEach(row=>{
-    const lblFS=row.field==='population'?7:10;
-    const lblY=(row.field==='institution'||row.field==='knowledge_status')
-      ? row.rowY+(row.field==='institution'?INST_LABEL_H:KNOW_LABEL_H)-5
-      : row.rowY+ROW_LABEL_H-3;
+    const lblFS=row.field==='population'?7:9;
+    const lblY=row.field==='population'
+      ? row.rowY+ROW_LABEL_H-3
+      : row.rowY+row.labelH-5;
     const lbl=el(ns,'text',{
       x:8, y:lblY,
       'font-family':'DM Mono,monospace','font-size':lblFS,'letter-spacing':0.14,
@@ -545,8 +608,10 @@ function render(){
       const textEls=[];
 
       if(row.field==='population'){
-        // Single line: population max
-        const val=p.pop.max>=1000?`${(p.pop.max/1000).toFixed(1)}k млн`:`${p.pop.max} млн`;
+        // Single line: population max (special override for last period)
+        const val=p.id===7
+          ? '10,3 млрд. (пик)'
+          : (p.pop.max>=1000?`${(p.pop.max/1000).toFixed(1)}k млн`:`${p.pop.max} млн`);
         const tEl=el(ns,'text',{
           x:cellX+COL_W/2, y:row.rowY+POP_ROW_H*0.62,
           'text-anchor':'middle','font-family':'DM Mono,monospace','font-size':11,
@@ -555,11 +620,8 @@ function render(){
         tEl.textContent=val;
         svg.appendChild(tEl); textEls.push(tEl);
       } else {
-        const isInst=row.field==='institution';
-        const isKnow=row.field==='knowledge_status';
-        const fs=isInst?INST_FS:isKnow?KNOW_FS:TEXT_FS;
-        const lh=isInst?INST_LINE_H:isKnow?KNOW_LINE_H:LINE_H;
-        const labelH=isInst?INST_LABEL_H:isKnow?KNOW_LABEL_H:ROW_LABEL_H;
+        const mul=p.id===7?1.45:1;
+        const fs=row.fs*mul, lh=row.lh*mul, labelH=row.labelH;
         const lines=wrapText(p.edu[row.field], innerW, fs, CR);
         const startY=row.rowY+labelH+CELL_PAD_V+lh*0.78;
         lines.forEach((line,li)=>{
@@ -584,51 +646,133 @@ function render(){
     svg.appendChild(dvl); mRowBorders.push(dvl);
   }
 
-  // ── TECH ICONS in columns view ────────────────────────
-  const TECH_ZONE_H=200;
+  // ── LITERACY RINGS (bottom of each column) ────────────
+  const LIT_Y=H-LIT_ZONE_H/2;
+  const R_OUT=Math.min(COL_W*0.18, 38);
+  const R_IN =R_OUT-7;
+  const C_OUT=2*Math.PI*R_OUT;
+  const C_IN =2*Math.PI*R_IN;
 
-  function addTechIcon(t, cx, cy, cellW, cellH, color){
-    const ICON_FS=Math.min(cellW*0.8, cellH*0.72);
-    const charCount=[...t.icon].length;
-    const iconFS=charCount>1 ? ICON_FS/charCount*1.5 : ICON_FS;
-    const iconY=cy+iconFS*0.36;
-    const iconEl=el(ns,'text',{
-      x:cx, y:iconY, 'text-anchor':'middle',
-      'font-family':'DM Mono,monospace','font-size':iconFS,
-      fill:color,'fill-opacity':0
-    });
-    iconEl.textContent=t.icon;
-    svg.appendChild(iconEl);
-    mColTechs.push({el:iconEl, tfo:0.55});
-    const lblFS=Math.min((cellW*0.8)/(t.name.length*0.6), cellH*0.18);
+  periods.forEach((p,i)=>{
+    if(p.id===7) return;
+    const cx=i*COL_W+COL_W/2;
+    const cy=LIT_Y;
+
+    // Outer track (max)
+    const trkO=el(ns,'circle',{cx,cy,r:R_OUT,fill:'none',
+      stroke:p.color,'stroke-opacity':0,'stroke-width':1.5});
+    svg.appendChild(trkO); mColTechs.push({el:trkO, tfo:0.18, attr:'stroke-opacity'});
+
+    // Outer arc (max value, faint)
+    const arcO=el(ns,'circle',{cx,cy,r:R_OUT,fill:'none',
+      stroke:p.color,'stroke-opacity':0,'stroke-width':2.5,
+      'stroke-dasharray':`${(C_OUT*p.lit.max/100).toFixed(2)} ${C_OUT.toFixed(2)}`,
+      'stroke-linecap':'round',
+      transform:`rotate(-90 ${cx} ${cy})`});
+    svg.appendChild(arcO); mColTechs.push({el:arcO, tfo:0.40, attr:'stroke-opacity'});
+
+    // Inner track (min)
+    const trkI=el(ns,'circle',{cx,cy,r:R_IN,fill:'none',
+      stroke:p.color,'stroke-opacity':0,'stroke-width':1.5});
+    svg.appendChild(trkI); mColTechs.push({el:trkI, tfo:0.22, attr:'stroke-opacity'});
+
+    // Inner arc (min value, dense)
+    const arcI=el(ns,'circle',{cx,cy,r:R_IN,fill:'none',
+      stroke:p.color,'stroke-opacity':0,'stroke-width':3,
+      'stroke-dasharray':`${(C_IN*p.lit.min/100).toFixed(2)} ${C_IN.toFixed(2)}`,
+      'stroke-linecap':'round',
+      transform:`rotate(-90 ${cx} ${cy})`});
+    svg.appendChild(arcI); mColTechs.push({el:arcI, tfo:0.92, attr:'stroke-opacity'});
+
+    // Centre: max %
+    const valFS=Math.min(R_OUT*0.62, 17);
+    const valEl=el(ns,'text',{x:cx, y:cy+valFS*0.36,
+      'text-anchor':'middle','font-family':'Outfit,sans-serif',
+      'font-weight':600,'font-size':valFS,
+      fill:'#fff','fill-opacity':0,'letter-spacing':0.2});
+    valEl.textContent=`${p.lit.max}%`;
+    svg.appendChild(valEl); mColTechs.push({el:valEl, tfo:0.92});
+
+    // Label below ring
+    const lblFS=8;
+    const lblEl=el(ns,'text',{x:cx, y:cy+R_OUT+lblFS+5,
+      'text-anchor':'middle','font-family':'DM Mono,monospace',
+      'font-size':lblFS,fill:'rgba(255,255,255,1)','fill-opacity':0,
+      'letter-spacing':0.16});
+    lblEl.textContent='ГРАМОТНОСТЬ';
+    svg.appendChild(lblEl); mColTechs.push({el:lblEl, tfo:0.35});
+
+    // Min — small tick under label
+    const rngFS=8;
+    const rngEl=el(ns,'text',{x:cx, y:cy+R_OUT+lblFS+rngFS+12,
+      'text-anchor':'middle','font-family':'DM Mono,monospace',
+      'font-size':rngFS,fill:p.color,'fill-opacity':0});
+    rngEl.textContent=`мин ${p.lit.min}%`;
+    svg.appendChild(rngEl); mColTechs.push({el:rngEl, tfo:0.55});
+  });
+
+  // ── TECH ICONS in columns view ────────────────────────
+  const TECH_ZONE_H=Math.max(H-TABLE_H-LIT_ZONE_H, 120);
+
+  function addTechIcon(t, cx, cy, cellW, cellH, color, periodIdx, uniformW){
+    // Icon size is fixed across all periods (based on the narrowest cell — 3 per row)
+    const refW=uniformW||cellW;
+    const labelGap=4;
+    const lblFSMax=Math.min(refW*0.16, 11);
+    const lblFS=Math.max(Math.min(lblFSMax, (cellW*0.9)/(t.name.length*0.55)), 7);
+    const lblH=lblFS*1.4;
+    const iconBox=Math.min(refW*0.86, cellH-lblH-labelGap);
+    const ix=cx-iconBox/2;
+    const iy=cy-(iconBox+labelGap+lblH)/2;
+
+    if(t.file){
+      const img=el(ns,'image',{
+        x:ix, y:iy, width:iconBox, height:iconBox,
+        href:`icons/${t.file}`,
+        preserveAspectRatio:'xMidYMin slice',
+        filter:`url(#tint${periodIdx})`,
+        opacity:0
+      });
+      img.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href',`icons/${t.file}`);
+      svg.appendChild(img);
+      mColTechs.push({el:img, tfo:0.85, attr:'opacity'});
+    } else {
+      const iconFS=iconBox*0.85;
+      const iconEl=el(ns,'text',{
+        x:cx, y:iy+iconBox*0.72, 'text-anchor':'middle',
+        'font-family':'DM Mono,monospace','font-size':iconFS,
+        fill:color,'fill-opacity':0
+      });
+      iconEl.textContent=t.icon;
+      svg.appendChild(iconEl);
+      mColTechs.push({el:iconEl, tfo:0.55});
+    }
+
     const lblEl=el(ns,'text',{
-      x:cx, y:iconY+iconFS*0.14+lblFS*1.2,
+      x:cx, y:iy+iconBox+labelGap+lblFS*0.92,
       'text-anchor':'middle','font-family':'DM Mono,monospace',
       'font-size':lblFS, fill:'rgba(255,255,255,1)','fill-opacity':0,'letter-spacing':0.05
     });
     lblEl.textContent=t.name;
     svg.appendChild(lblEl);
-    mColTechs.push({el:lblEl, tfo:0.38});
+    mColTechs.push({el:lblEl, tfo:0.55});
   }
 
+  // Layout: max 3 per row. 1→centred, 2→row of 2, 3→row of 3.
+  // Uniform icon size based on the narrowest layout (3 per row)
+  const UNIFORM_W=COL_W/3;
   periods.forEach((p,i)=>{
     const colX=i*COL_W;
-    if(p.tech.length<=1){
-      // Single tech: full column width, vertically centred
-      if(!p.tech[0]) return;
-      addTechIcon(p.tech[0], colX+COL_W/2, TABLE_H+TECH_ZONE_H/2, COL_W, TECH_ZONE_H, p.color);
-    } else {
-      // 2×2 grid (up to 4 slots, some may be empty)
-      const cellW=COL_W/2, cellH=TECH_ZONE_H/2;
-      for(let slot=0;slot<4;slot++){
-        const t=p.tech[slot];
-        if(!t) continue;
-        const col2=slot%2, row2=Math.floor(slot/2);
-        const cx=colX+col2*cellW+cellW/2;
-        const cy=TABLE_H+row2*cellH+cellH/2;
-        addTechIcon(t, cx, cy, cellW, cellH, p.color);
-      }
-    }
+    const techs=p.tech.slice(0,3);
+    const n=techs.length;
+    if(!n) return;
+    const cellW=COL_W/n;
+    const cellH=TECH_ZONE_H;
+    techs.forEach((t,slot)=>{
+      const cx=colX+slot*cellW+cellW/2;
+      const cy=TABLE_H+cellH/2;
+      addTechIcon(t, cx, cy, cellW, cellH, p.color, i, UNIFORM_W);
+    });
   });
 
   zone.appendChild(svg);
@@ -773,49 +917,69 @@ function renderSlide3(){
     fill:'#06070F',rx:3,stroke:CAI,'stroke-width':1,'stroke-opacity':0.55}));
   svg.appendChild(txt(HALF,AIY+alFS*0.42,atxt,alFS,CAI,{mono:true,ls:'0.14em'}));
 
-  // ── Icons: Minotaur + Centaur (flat style) ────────────
-  const ICSZ=Math.min(LH*0.50,100);
-  const iMinY=Y[2]+LH*0.60;
-  const iCenY=Y[1]+LH*0.56;
+  // ── Icons: Minotaur (noun-minotaur-6501794.svg) + Centaur (centaur_lknr93xbis4g.svg) ──
+  const ICSZ=Math.min(LH*0.52,105);
+  const iMinY=Y[2]+LH*0.58;
+  const iCenY=Y[1]+LH*0.54;
 
-  function mkIcon(cx,cy,sz,col,shapes){
-    const sc=sz/60;
+  function svgIcon(cx,cy,scale,color,paths,vbCx,vbCy){
     const g=document.createElementNS(ns,'g');
-    g.setAttribute('transform',`translate(${cx.toFixed(1)},${cy.toFixed(1)}) scale(${sc.toFixed(3)})`);
-    shapes.forEach(([tag,at])=>{
-      const el=document.createElementNS(ns,tag);
-      Object.entries({fill:col,stroke:'none',...at}).forEach(([k,v])=>el.setAttribute(k,String(v)));
-      g.appendChild(el);
+    g.setAttribute('transform',`translate(${cx.toFixed(1)},${cy.toFixed(1)}) scale(${scale.toFixed(4)}) translate(${(-vbCx).toFixed(2)},${(-vbCy).toFixed(2)})`);
+    g.setAttribute('fill',color);
+    paths.forEach(d=>{
+      const p=document.createElementNS(ns,'path');
+      p.setAttribute('d',d);
+      g.appendChild(p);
     });
     return g;
   }
 
-  // ── Minotaur: flat bull-headed humanoid ──────────────
-  svg.appendChild(mkIcon(LCX,iMinY,ICSZ,C1,[
-    ['path',{d:'M-13,-34 L-22,-56 L-3,-46 Z','fill-opacity':0.82}],         // left horn
-    ['path',{d:'M13,-34 L22,-56 L3,-46 Z','fill-opacity':0.82}],             // right horn
-    ['circle',{cx:0,cy:-22,r:14,'fill-opacity':0.78}],                       // head
-    ['ellipse',{cx:0,cy:-14,rx:7,ry:5,'fill-opacity':0.50}],                 // snout
-    ['path',{d:'M-12,-8 L-15,14 L15,14 L12,-8 Z','fill-opacity':0.62}],     // torso
-    ['path',{d:'M-12,-5 L-28,-1 L-27,6 L-11,2 Z','fill-opacity':0.72}],     // left arm
-    ['path',{d:'M12,-5 L28,-1 L27,6 L11,2 Z','fill-opacity':0.72}],          // right arm
-    ['path',{d:'M-9,14 L-11,34 L-3,34 L-1,14 Z','fill-opacity':0.72}],      // left leg
-    ['path',{d:'M9,14 L11,34 L3,34 L1,14 Z','fill-opacity':0.72}],           // right leg
-  ]));
+  // noun-minotaur-6501794.svg — viewBox "18 3 63 94", centre (49.5,50)
+  const MINOTAUR_PATHS=[
+    'M62.17,24.54c-1.39,0-3-.25-4.74-.98-.51-.21-.75-.8-.53-1.31.21-.51.81-.75,1.31-.53,2.55,1.07,4.76.9,6.15.57-.74-.74-1.51-1.8-1.73-3.14-.35-.39-2.7-.12-5.09.77-.52.19-1.09-.07-1.29-.59-.19-.52.07-1.09.58-1.29.8-.3,4.9-1.74,6.76-.67.55.32.9.82,1.01,1.44.29,1.76,2.27,2.94,2.29,2.95l1.54.9-1.57.84c-.11.06-1.95,1.02-4.69,1.02Z',
+    'M46.8,31.2c-1.58,0-2.7-.49-3.35-1.45-1.15-1.71-.14-4.1-.02-4.36.07-.17,1.94-4.64,3.62-7.09,1.15-1.68,3.86-2.55,7.63-2.45,1.22.02,2.48-.04,3.71-.16,3.75-.39,6-.62,7.28-1.93,2.23-2.29.81-7.03.64-7.56l-.88-2.76,2.39,1.63c.91.62,3.89,2.93,4.07,6.71.11,2.31-.92,4.01-1.25,4.58-1.27,2.12-3.46,3.64-6.48,4.51-.53.15-1.08-.16-1.24-.69-.15-.53.15-1.08.69-1.24,2.52-.72,4.31-1.94,5.32-3.61.29-.48,1.05-1.75.97-3.46-.05-1.17-.49-2.17-1.03-2.97.17,2.03-.08,4.52-1.76,6.25-1.78,1.83-4.46,2.1-8.51,2.52-1.32.14-2.64.19-3.96.17-4.41-.12-5.67,1.18-5.94,1.58-1.56,2.28-3.41,6.7-3.43,6.75-.19.44-.61,1.78-.15,2.46.33.5,1.19.58,1.85.56,2.87-.08,4.87-1.43,6.19-2.33.84-.57,1.39-.94,2.03-.94.72-.05,3.39-1.42,3.82-2.15-.12-.45.09-.93.52-1.15.49-.25,1.09-.05,1.34.44.15.31.34.94-.14,1.72-.96,1.56-4.4,3.14-5.54,3.14-.07.04-.53.35-.9.6-1.42.97-3.81,2.58-7.26,2.67-.07,0-.14,0-.21,0Z',
+    'M47.26,20.83c-.06,0-.11,0-.17-.01-.12-.02-2.92-.51-5.08-1.86-.82-.51-2.53-1.58-3.25-3.53-1.23-3.36,1.42-6.67,1.73-7.04l1.72-2.05.05,2.67c.02,1.14.29,2.16.81,3.05,1.2,2.06,3.76,4.18,7.38,3.91.55-.03,1.03.37,1.07.93s-.37,1.03-.92,1.07c-3.77.28-7.33-1.6-9.25-4.9-.22-.38-.41-.79-.57-1.21-.32.87-.49,1.9-.13,2.88.48,1.3,1.7,2.07,2.43,2.52,1.82,1.14,4.33,1.58,4.36,1.59.54.09.91.61.82,1.16-.08.49-.51.83-.98.83Z',
+    'M45.16,24.52c-.11,0-.22-.02-.33-.06-3.58-1.26-3.83-1.89-3.78-2.58.03-.42.32-.92,1.04-1.06.76-.15,2.44-1.19,3.32-1.81.45-.32,1.07-.21,1.39.24.32.45.21,1.08-.24,1.39-.17.12-1.22.85-2.33,1.44.4.16.84.33,1.27.49.52.18.79.75.61,1.28-.15.41-.53.67-.94.67Z',
+    'M51.52,22.17c-.19,0-.38-.11-.46-.31-.11-.25.01-.55.27-.66.96-.4,2.07-1.11,2.14-1.47.05-.27.31-.45.58-.4.27.05.45.31.4.58-.2,1.06-2.14,1.96-2.73,2.21-.06.03-.13.04-.19.04Z',
+    'M52.99,22.77c-.42,0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75ZM52.99,21.77c-.14,0-.25.11-.25.25,0,.27.5.27.5,0,0-.14-.11-.25-.25-.25Z',
+    'M48.25,26.41c-.15,0-.31-.07-.41-.21-.16-.22-.11-.54.11-.7.14-.1.89-.62,1.55-.51.28.04.51.19.67.41.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.09-.04-.5.1-.81.32-.09.06-.19.1-.29.1Z',
+    'M44.53,26.83c-.11,0-.23-.04-.32-.12-.21-.18-.24-.49-.07-.7.05-.06.46-.54,1.06-.59.33-.02.65.08.91.32.21.18.23.5.05.71-.18.21-.5.23-.71.05-.09-.08-.15-.08-.17-.08-.14.01-.31.16-.38.23-.1.12-.24.18-.38.18Z',
+    'M46.44,29.57c-.16,0-.32-.08-.41-.22-.16-.23-.1-.54.13-.7.45-.31,2.74-1.81,4.11-1.18.25.12.36.41.24.66-.12.25-.42.36-.66.24-.63-.29-2.2.46-3.12,1.09-.09.06-.18.09-.28.09Z',
+    'M49,27.05c-.21,0-.38-.17-.38-.38s.17-.38.38-.38.38.17.38.38-.17.38-.38.38ZM49,26.55c-.07,0-.12.06-.12.12,0,.14.25.14.25,0,0-.07-.06-.12-.12-.12Z',
+    'M45.29,27.51c-.21,0-.38-.17-.38-.38s.17-.38.38-.38.38.17.38.38-.17.38-.38.38ZM45.29,27.01c-.07,0-.12.06-.12.12,0,.14.25.14.25,0,0-.07-.06-.12-.12-.12Z',
+    'M57.56,43.07c-1.44,0-3.08-.23-4.9-.86-.52-.18-.8-.75-.62-1.27.18-.52.75-.8,1.27-.62,5.95,2.05,9.57-.73,9.72-.84.43-.34,1.06-.27,1.4.16.34.43.28,1.06-.15,1.4-.14.11-2.59,2.03-6.72,2.03Z',
+    'M36.38,48.52l-.6-.33c-2.44-1.31-5.69-2.49-6.91-2.06l-1.09.38-.22-1.13c-.18-.91-.54-1.92-.82-2.35-.86.81-1.62,2.55-1.86,3.19-.19.52-.76.79-1.28.6-.52-.19-.79-.76-.6-1.28.11-.31,1.15-3.08,2.73-4.27.5-.38,1.08-.47,1.61-.26,1.03.39,1.63,1.9,1.95,3.05,1.83-.06,4.17.82,5.82,1.58.29-2.91,2.69-6.2,3.39-7.11.86-3.71,5.08-5.69,6.62-6.3l.34-1.55c.12-.54.65-.88,1.19-.76.54.12.88.65.76,1.19l-.58,2.63-.54.18c-.05.02-5.23,1.76-5.87,5.22l-.05.25-.16.2c-1.51,1.89-3.67,5.57-3,7.38l.24.67-1.08.89Z',
+    'M68.58,46.19c-.18,0-.36-.05-.52-.15-4.13-2.52-4.43-9.77-4.44-10.08-.02-.55.41-1.01.96-1.03.55-.03,1.01.41,1.04.96,0,.06.28,6.48,3.48,8.44.47.29.62.9.33,1.37-.19.31-.52.48-.85.48Z',
+    'M70.58,61.24c-.57,0-1.12-.03-1.63-.07-3.18-.25-3.16-3.06-3.15-4.42,0-.33,0-.83-.05-.97-.25-.34-.33-.82-.18-1.28.26-.85,1.29-1.5,2.09-1.89-.5-6.87,1.64-8.62,2.09-8.9.47-.3,1.08-.16,1.38.3.29.45.17,1.05-.27,1.36-.09.08-1.74,1.61-1.15,7.78l.07.75-.71.27c-.57.22-1.2.57-1.48.82.22.51.21,1.13.21,1.77-.01,1.79.16,2.32,1.31,2.41.98.08,3.99.31,5.05-.94.48-.56.57-1.48.26-2.73-.41-1.67,1.67-9.57,2.52-12.66l-1.39-1.71-.05-.21c-.38-1.53-1.81-3.82-3.92-6.27-.35-.41-.66-.83-.98-1.27-.13-.18-.26-.36-.4-.54-1.32-1.74-5-2.32-6.3-2.39l-.38-.02-4.2-4.23c-.39-.39-.39-1.03,0-1.41.39-.39,1.02-.39,1.41,0l3.67,3.69c1.32.13,5.55.72,7.39,3.15.14.19.28.37.42.56.28.39.57.78.88,1.14,1.6,1.87,3.62,4.55,4.28,6.87l1.77,2.18-.14.5c-1.41,5.1-2.82,11.2-2.64,12.16.46,1.9.23,3.42-.68,4.5-1.18,1.39-3.24,1.71-5.1,1.71Z',
+    'M39.3,56.21l-3.28-.32c-3.53.23-7.84-2.51-9.38-3.58-1.3.68-2.37.32-3.5-.05-.59-.19-1.26-.41-2.1-.55-.96-.15-1.63-.84-1.85-1.89-.55-2.63,1.85-7.95,3.32-8.89.78-.5,1.46-.42,1.88-.27,1.1.4,1.54,1.64,1.62,1.88.17.53-.12,1.09-.65,1.26-.52.17-1.08-.12-1.26-.64-.08-.25-.28-.56-.39-.62,0,0-.05.02-.13.07-.7.48-2.85,4.98-2.43,6.82.06.27.13.28.2.29,1,.16,1.78.42,2.41.62,1.23.4,1.58.49,2.31-.06l.6-.45.6.46c.05.04,5.14,3.87,8.67,3.58h.09s2.52.24,2.52.24c1.8-1.79,3.74-3.9,4.05-4.5.09-.46.49-.81.98-.81.55,0,1,.45,1,1,0,.41,0,1.17-4.96,6.06l-.33.33Z',
+    'M43.36,45.12c-1.11,0-1.84-.44-2.28-.84-1.31-1.19-1.33-3.16-1.33-3.38,0-.55.45-.99,1-.99h0c.55,0,1,.45.99,1,0,.36.13,1.4.68,1.9.28.25.66.35,1.17.3,3.13-.31,4.8-2.25,4.81-2.27.36-.42.99-.48,1.41-.12.42.36.48.99.12,1.41-.09.1-2.21,2.58-6.15,2.98-.15.02-.3.02-.44.02Z',
+    'M56.31,58.15c-4.71,0-10.5-1.38-11.39-1.6l-.96-.24.23-.96c.32-1.3.21-2.6-.27-3.72-1.03-2.37-2.18-5.98-2.23-6.13-.17-.53.12-1.09.65-1.26.53-.17,1.09.12,1.26.65.01.04,1.17,3.67,2.16,5.95.54,1.24.73,2.63.57,3.99,3.61.81,10.88,2.04,13.61.83.43-1.52,1.99-6.62,3.95-8.8l.23-.19c1.09-.65,2.19-1.55,2.45-1.99-.17-.41-.05-.89.32-1.17.44-.34,1.07-.26,1.4.18.28.36.38.81.29,1.27-.25,1.34-2.29,2.73-3.3,3.35-1.58,1.88-3.08,6.6-3.53,8.3l-.1.39-.34.21c-1.15.71-2.97.96-4.99.96Z',
+    'M57.63,72.35l-11.24-1.25-2.72-14.65c-.1-.54.26-1.06.8-1.17.54-.1,1.06.26,1.17.8l2.45,13.19,8.03.89,3.38-13.27c.14-.54.68-.86,1.21-.72.54.14.86.68.72,1.22l-3.8,14.95Z',
+    'M31.53,94.43l4.66-7.08c.26-.4.62-.72,1.03-.95l2.94-1.6,3.19-2.94c.05-.05.07-.11.06-.18,0-.05-.04-.11-.12-.15-2.98-1.24-8.13-4-9.09-8.62-1.32-6.33,8.28-15.47,8.69-15.86.4-.38,1.03-.36,1.41.04.38.4.36,1.03-.04,1.41-2.56,2.42-9.01,9.64-8.1,13.99.77,3.72,5.28,6.1,7.89,7.18.7.29,1.19.91,1.32,1.65.13.74-.12,1.49-.68,2l-3.48,3.16-3.05,1.66c-.13.07-.24.17-.32.3l-2.54,3.86.87-.03.9-1.57c.36-.57.99-.82,1.59-.67.6.15,1.04.67,1.09,1.29l.08.96h4.21l.47-4.87.41-.26s3.26-2.12,3.92-5.62c.04-.23-.05-.48-.25-.63l-2.44-1.91-.08-.34c-.49-2.07-1.25-4.17-1.68-4.67-.41-.1-.73-.45-.77-.9-.04-.55.37-1.03.92-1.07.58-.04,1.91-.15,3.39,5.84l1.89,1.48c.79.62,1.16,1.6.98,2.57-.67,3.57-3.35,5.87-4.4,6.65l-.55,5.74h-7.87l-.08-1.01-.55.96-5.84.18ZM44.73,74.02h0,0Z',
+    'M40.94,74.95c-.51,0-.95-.39-1-.91-.05-.55.36-1.04.91-1.09,3.68-.33,5.49-2.65,5.51-2.68.33-.44.96-.52,1.4-.19.44.34.52.96.19,1.4-.09.12-2.38,3.04-6.92,3.45-.03,0-.06,0-.09,0Z',
+    'M45.08,88.62c-.89,0-2.04-.71-2.57-1.08-.23-.16-.28-.47-.13-.7.16-.23.47-.28.7-.13.91.63,1.9,1,2.11.89.22-.17.53-.12.7.1.16.22.12.54-.11.7-.2.15-.44.21-.7.21Z',
+    'M66.6,74.95c-.18,0-.37-.05-.53-.15-.47-.29-.61-.91-.31-1.38,3.78-6.02-5.17-15.48-5.26-15.57-.38-.4-.37-1.03.03-1.41.4-.38,1.03-.37,1.41.03.42.43,10.12,10.69,5.51,18.02-.19.3-.51.47-.85.47Z',
+    'M66.6,89.12c-.06,0-.11,0-.17-.01-.54-.09-.91-.61-.82-1.16l.73-4.24c.1-.55-.14-1.12-.6-1.44l-3.38-2.35c-.22-.16-.42-.25-.57-.27-4.33-.62-4.92-7.88-4.97-8.71-.04-.55.38-1.03.93-1.06.58-.03,1.03.38,1.06.93.11,1.67.95,6.53,3.26,6.85.48.07.95.27,1.43.61l3.38,2.35c1.1.76,1.66,2.1,1.43,3.42l-.73,4.24c-.08.49-.51.83-.98.83Z',
+    'M69.83,96.77l-6.48-2.86,2.31-6.14c.2-.52.77-.78,1.29-.58.52.19.78.77.58,1.29l-1.65,4.37,2.33,1.03.12-.87c.09-.63.55-1.13,1.16-1.28.62-.15,1.25.09,1.62.6l1.23,1.72.7-.35v-2.39l-1.94-3.42c-.45-.79-.71-1.7-.76-2.61l-.38-7.29c-.03-.63-.34-1.21-.84-1.59l-2.15-1.65c-.44-.34-.52-.96-.19-1.4.34-.44.96-.52,1.4-.19l2.15,1.65c.96.74,1.55,1.86,1.62,3.07l.38,7.29c.03.6.21,1.2.5,1.72l2.2,3.88v4.16l-3.33,1.67-1.57-2.19-.34,2.36Z',
+    'M69.34,88.13h-1.66c-.28,0-.5-.22-.5-.5s.22-.5.5-.5h1.66c.28,0,.5.22.5.5s-.22.5-.5.5Z',
+    'M50.89,53.37c-.28,0-.5-.22-.5-.5v-6.17c0-.28.22-.5.5-.5s.5.22.5.5v6.17c0,.28-.22.5-.5.5Z',
+    'M55.42,50.82c-.24,0-.45-.17-.49-.41-.05-.27.13-.53.4-.58.98-.17,1.43-1.72,1.53-2.29.04-.27.3-.46.57-.41.27.04.46.3.42.57-.02.11-.46,2.79-2.34,3.12-.03,0-.06,0-.09,0Z',
+    'M47.18,51.32s-.06,0-.09,0c-1.51-.27-1.86-2.39-1.88-2.48-.04-.27.14-.53.42-.57.27-.04.53.14.57.41.06.39.4,1.53,1.07,1.65.27.05.45.31.4.58-.04.24-.25.41-.49.41Z',
+    'M48.63,54.82s-.06,0-.09,0c-1.51-.27-1.86-2.39-1.88-2.48-.04-.27.14-.53.41-.57.27-.04.53.14.57.41.06.39.4,1.53,1.07,1.65.27.05.45.31.4.58-.04.24-.25.41-.49.41Z',
+    'M54.22,55.04c-.24,0-.45-.17-.49-.41-.05-.27.13-.53.4-.58,1.05-.19,1.38-2.08,1.39-2.1.04-.27.31-.46.57-.41.27.04.46.3.42.57-.02.11-.43,2.61-2.2,2.93-.03,0-.06,0-.09,0Z',
+    'M76.8,68.44c-.13,0-.26-.05-.36-.16-1.23-1.3-2.68-2.34-4.29-3.08-1.79-.82-3.79-1.26-5.77-1.26h-.02c-.28,0-.5-.22-.5-.5s.27-.49.52-.5c2.13,0,4.27.47,6.19,1.35,1.74.8,3.29,1.91,4.61,3.3.19.2.18.52-.02.71-.1.09-.22.14-.34.14Z',
+    'M79.16,73.69l-.38-.25c-.52-.35-1.48-1.15-2.02-2.5-.5-1.24-.43-2.36-.29-3.09l.08-.41h.42c.41.01,1.83.13,2.74,1.29.99,1.27.88,3.21-.26,4.61l-.29.35ZM77.39,68.49c-.05.53-.02,1.28.3,2.08.33.82.84,1.39,1.26,1.75.58-.98.59-2.17-.03-2.97-.44-.57-1.09-.78-1.53-.85Z',
+  ];
 
-  // ── Centaur: flat human-on-horse ─────────────────────
-  svg.appendChild(mkIcon(RCX,iCenY,ICSZ,C2,[
-    ['circle',{cx:-2,cy:-44,r:11,'fill-opacity':0.78}],                       // human head
-    ['path',{d:'M-10,-33 L-12,-13 L8,-13 L6,-33 Z','fill-opacity':0.62}],   // torso
-    ['path',{d:'M-10,-25 L-26,-17 L-24,-11 L-8,-19 Z','fill-opacity':0.72}],// left arm
-    ['path',{d:'M6,-25 L20,-34 L22,-28 L8,-19 Z','fill-opacity':0.72}],      // right arm raised
-    ['path',{d:'M-26,-13 C-32,-4 -30,12 -22,14 L24,14 C32,10 30,-6 22,-13 Z','fill-opacity':0.52}], // horse body
-    ['path',{d:'M-20,14 L-22,36 L-14,36 L-12,14 Z','fill-opacity':0.72}],   // front-left leg
-    ['path',{d:'M-8,14 L-10,36 L-2,36 L0,14 Z','fill-opacity':0.72}],        // front-right leg
-    ['path',{d:'M10,14 L8,36 L16,36 L18,14 Z','fill-opacity':0.72}],         // back-left leg
-    ['path',{d:'M20,14 L18,36 L26,36 L28,14 Z','fill-opacity':0.72}],        // back-right leg
-    ['path',{d:'M28,8 C40,12 38,26 28,28',fill:'none',stroke:C2,'stroke-width':5,'stroke-linecap':'round','stroke-opacity':0.65}], // tail
-  ]));
+  // centaur_lknr93xbis4g.svg — viewBox "0 0 512 512.003", centre (256,256)
+  const CENTAUR_PATHS=[
+    'm504.972656 327.023438c3.617188-20.753907 7.03125-40.355469 7.03125-55.023438 0-25.214844-10.671875-39.945312-19.625-47.863281-11.035156-9.761719-26.082031-15.136719-42.378906-15.136719-20.261719 0-47.378906 15.144531-61.925781 24.304688-10.96875-7.136719-24.039063-11.304688-38.074219-11.304688h-140v-92c0-12.421875-7.589844-23.101562-18.371094-27.652344-5.804687-8.714844-14.273437-15.503906-24.230468-19.214844 7.832031-8.828124 12.601562-20.433593 12.601562-33.132812 0-27.570312-22.429688-50-50-50-27.574219 0-50 22.429688-50 50 0 12.699219 4.765625 24.300781 12.59375 33.128906-19.015625 7.085938-32.597656 25.417969-32.597656 46.871094v28.4375l-18.355469-7.726562c-7.382813-3.109376-15.539063-3.15625-22.960937-.132813-7.417969 3.023437-13.21875 8.757813-16.328126 16.140625-6.417968 15.246094.761719 32.871094 16.007813 39.292969l24.871094 10.46875c-2.0625 4.066406-3.234375 8.65625-3.234375 13.519531 0 13.035156 8.359375 24.152344 20 28.28125v63.71875c0 1.355469.109375 2.769531.296875 4.222656l-19.125 133.847656-9.875 39.503907c-.746094 2.988281-.074219 6.152343 1.820312 8.582031 1.894531 2.425781 4.804688 3.84375 7.882813 3.84375h50c5.523437 0 10-4.476562 10-10v-38.265625l16.59375-46.464844c4.492187 4.15625 9.144531 7.894531 13.742187 10.710938l8.363281 34-9.398437 37.59375c-.75 2.988281-.078125 6.152343 1.820313 8.582031 1.894531 2.425781 4.800781 3.84375 7.878906 3.84375h50.003906c5.519531 0 10-4.476562 10-10v-30c3.160156 0 6.132812-1.492188 8.019531-4.03125 1.890625-2.535156 2.464844-5.8125 1.558594-8.839844l-24.773437-82.574218c31.636718 8.195312 51.148437 8.523437 80.382812.996093l-14.96875 82.339844-9.921875 39.683594c-.746094 2.988281-.078125 6.152343 1.820313 8.582031 1.894531 2.425781 4.800781 3.84375 7.882812 3.84375h50c5.523438 0 10-4.476562 10-10v-37.832031l19.734375-43.414063c3.28125 1.839844 6.695313 3.683594 10.265625 5.527344v34.488281l-9.703125 38.808594c-.746094 2.984375-.074219 6.152344 1.820313 8.578125 1.894531 2.429688 4.804687 3.847656 7.882812 3.847656h50c5.523438 0 10-4.476562 10-10v-30c3.171875 0 6.160156-1.507812 8.042969-4.058594 1.886719-2.554687 2.449219-5.851562 1.515625-8.882812l-9.210938-29.925781c4.433594-19.148438 19.652344-85.769531 19.652344-97.132813v-40c0-.328125-.019531-.648437-.027344-.976562 14.902344-4.910156 19.5625-2.710938 20.707032-1.816406 5.214843 4.070312 2.714843 23.683593.890624 38.003906-1.265624 9.917968-2.570312 20.171875-2.570312 29.789062 0 15.820313 3.65625 32.625 16.75 42.796875 9.042969 7.027344 25.65625 13.203125 37.25 13.203125 3.507812 0 6.84375-1.851562 8.660156-5 2.265625-3.921875 1.613282-8.871094-1.585937-12.074218-.132813-.132813-3.230469-3.53125-1.863281-22.242188.988281-13.503906 3.925781-30.359375 6.761718-46.664062zm-434.972656-87.023438c-5.515625 0-10-4.484375-10-10s4.484375-10 10-10h90c5.523438 0 10-4.476562 10-10v-80c0-5.515625 4.484375-10 10-10 5.511719 0 10 4.484375 10 10v100c0 5.515625-4.488281 10-10 10zm60-220c16.539062 0 30 13.457031 30 30s-13.460938 30-30 30c-16.542969 0-30-13.457031-30-30s13.457031-30 30-30zm-20 80h40c5.460938 0 10.578125 1.476562 14.992188 4.039062-8.953126 5.195313-14.992188 14.882813-14.992188 25.960938v70h-70v-70c0-16.542969 13.457031-30 30-30zm-89.257812 82.132812c-1.007813-2.472656-.992188-5.191406.042968-7.652343 1.039063-2.460938 2.96875-4.375 5.445313-5.382813 1.21875-.496094 2.496093-.742187 3.773437-.742187 1.3125 0 2.628906.261719 3.878906.789062l26.113282 10.992188v21.585937c-.050782.015625-.101563.03125-.152344.050782l-33.722656-14.199219c-2.460938-1.035157-4.371094-2.96875-5.378906-5.441407zm66.53125 199.53125c2.644531 3.757813 8.058593 11.203126 14.90625 19.289063l-18.230469 51.046875h-21.421875l12.71875-89.019531c4.484375 7.679687 8.996094 14.375 12.027344 18.683593zm-6.273438 110.335938h-27.195312l5-20h22.195312zm99 0h-27.195312l5-20h22.195312zm110 0h-27.191406l5-20h22.191406zm3.5625-40h-21.582031l12.125-66.667969c6.691406 8.363281 16.140625 16.644531 28.4375 24.90625zm86.4375 40h-27.191406l5-20h22.191406zm20-160c-.011719 6.484375-10.042969 53.515625-19.738281 95.238281-.402344 1.71875-.335938 3.515625.179687 5.203125l6.019532 19.558594h-26.460938v-31.863281c0-3.792969-2.148438-7.265625-5.546875-8.953125-44.167969-21.953125-57.96875-39.242188-61.519531-50.265625-.066406-.597657-.175782-1.195313-.355469-1.789063-.058594-.195312-5.863281-19.585937-7.738281-29.917968-.988282-5.433594-6.195313-9.039063-11.628906-8.050782-5.433594.988282-9.039063 6.195313-8.050782 11.628906 1.175782 6.460938 3.582032 15.609376 5.5 22.492188-37.382812 11.085938-54.308594 10.148438-97.796875-2.863281-3.519531-1.050781-7.339843-.089844-9.9375 2.511719-2.601562 2.601562-3.5625 6.421874-2.503906 9.941406l26.136719 87.128906h-28.722656l-8.125-33.042969c-.714844-2.898437-2.6875-5.328125-5.375-6.621093-9.984376-4.808594-26.34375-21.757813-40.703126-42.179688-16.238281-23.089844-23.632812-41.148438-23.632812-48.15625v-62h100c12.277344 0 22.847656-7.414062 27.488281-18h142.511719c27.570312 0 50.003906 22.429688 50.003906 50v40zm85.269531-8.40625c-4.914062 28.226562-8.285156 49.917969-7.148437 65.300781-12.105469-3.773437-19.117188-9.898437-19.117188-31.894531 0-8.347656 1.222656-17.960938 2.410156-27.257812 2.964844-23.261719 5.761719-45.230469-8.429687-56.304688-5.132813-4.003906-11.335937-5.492188-17.816406-5.492188-6.105469 0-12.449219 1.324219-18.375 3.101563-2.773438-8.832031-7.261719-16.910156-13.0625-23.855469 14.128906-8.40625 33.625-18.191406 46.269531-18.191406 20.304688 0 42 11.296875 42 43 .003906 12.9375-3.421875 32.589844-6.730469 51.59375zm0 0',
+    'm196.050781 314.148438c-10.832031-1.078126-20.5625-3.378907-25.410156-6.007813-1.429687-.75-3.03125-1.140625-4.632813-1.140625-3.738281 0-7.136718 2.050781-8.867187 5.359375-2.5625 4.878906-.660156 10.941406 4.21875 13.5 10.011719 5.140625 22.089844 7.019531 32.589844 8.179687.351562.039063.710937.0625 1.058593.0625 5.132813 0 9.390626-3.851562 9.929688-8.953124.28125-2.660157-.488281-5.257813-2.167969-7.339844-1.679687-2.078125-4.070312-3.367188-6.71875-3.660156zm0 0',
+    'm234.539062 315.109375c-5.507812.242187-9.800781 4.921875-9.558593 10.429687.238281 5.359376 4.617187 9.5625 9.988281 9.5625.140625 0 .289062 0 .441406-.011718 5.507813-.238282 9.800782-4.917969 9.550782-10.429688-.230469-5.511718-4.882813-9.808594-10.421876-9.550781zm0 0',
+  ];
+
+  svg.appendChild(svgIcon(LCX, iMinY, ICSZ/94,  C1, MINOTAUR_PATHS, 49.5, 50));
+  svg.appendChild(svgIcon(RCX, iCenY, ICSZ/512, C2, CENTAUR_PATHS, 256, 256));
 
   // ── Transformation arrow: minotaur → centaur ──────────
   const taX0=LCX+ICSZ*0.40, taY0=iMinY-ICSZ*0.22;
