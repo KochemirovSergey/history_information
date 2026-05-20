@@ -1,0 +1,301 @@
+{
+  "technologies": [
+    {"id":  1, "name": "Алфавит",          "year": -1050, "period_id": 1, "icon": "α"},
+    {"id":  2, "name": "Книги",            "year":   400, "period_id": 2, "icon": "☰"},
+    {"id":  3, "name": "Университет",      "year":  1088, "period_id": 2, "icon": "⌂"},
+    {"id":  4, "name": "Печатный станок",  "year":  1440, "period_id": 3, "icon": "⎙"},
+    {"id":  5, "name": "Телеграф",         "year":  1837, "period_id": 4, "icon": "–·–"},
+    {"id":  6, "name": "Телефон",          "year":  1876, "period_id": 5, "icon": "☎"},
+    {"id":  7, "name": "Радио",            "year":  1895, "period_id": 5, "icon": ")))"},
+    {"id":  8, "name": "Телевидение",      "year":  1926, "period_id": 6, "icon": "▣"},
+    {"id":  9, "name": "Компьютер",        "year":  1946, "period_id": 6, "icon": "⊡"},
+    {"id": 10, "name": "Интернет",         "year":  1969, "period_id": 6, "icon": "◎"},
+    {"id": 11, "name": "Соцсети",          "year":  2004, "period_id": 7, "icon": "⬡"},
+    {"id": 12, "name": "Смартфон",         "year":  2007, "period_id": 7, "icon": "▯"},
+    {"id": 13, "name": "ИИ",               "year":  2022, "period_id": 7, "icon": "◈"}
+  ],
+  "meta": {
+    "scales": {
+      "social_elevator_score": "0 = закрыт полностью, 10 = максимально открыт",
+      "elite_mass_gap_score": "0 = разрыв минимален, 10 = разрыв максимален",
+      "population_mln": "миллионов человек",
+      "paradigm_shift_years": "лет на смену одной парадигмы",
+      "intellectual_labor_pct": "% от всего труда",
+      "literacy_pct": "% грамотного населения",
+      "info_volume_items": "единиц (свитков / книг / материалов за жизнь)",
+      "work_hours_per_year": "часов в год",
+      "work_hours_per_week": "часов в неделю",
+      "work_days_per_year": "рабочих дней в год"
+    }
+  },
+  "periods": [
+    {
+      "id": 1,
+      "name": "Рабовладельческий",
+      "date_label": "~1500 до н.э. — IV в. н.э.",
+      "date_start": -1500,
+      "date_end": 400,
+      "population_mln": { "min": 110, "max": 200 },
+      "economy": {
+        "main_labor_type": "Рабский труд, земледелие, ремесло",
+        "intellectual_labor_pct": { "min": 1.25, "max": 2 },
+        "social_elevator_score": 3,
+        "social_elevator_label": "Узкий — писцы, отпущенники, риторы; шанс редок"
+      },
+      "information": {
+        "literacy_pct": { "min": 3, "max": 12 },
+        "info_technologies": ["Алфавит", "Глиняные таблички", "Свитки", "Почта", "Библиотека Александрии", "Пергамент"],
+        "info_volume_avg_items": { "min": 0, "max": 1 },
+        "info_volume_elite_items": { "min": 60, "max": 550 }
+      },
+      "education": {
+        "institution": "Философские, риторические, храмовые и жреческие школы",
+        "knowledge_status": "Знание у элиты (жрецы, философы, аристократия); систематическое обучение, но нет корпорации университета и учёных степеней",
+        "avg_person": "Обучение труду в семье; устное ремесло, изредка — чтение",
+        "elite": "Храмовые школы → Академия Платона, Ликей; платная риторика и философия",
+        "real_effect_masses": "Рост грамотности не повысил статус большинства — рабы оставались рабами",
+        "elite_progress": "Платон, Аристотель, Архимед: кумулятивный прогресс через личное общение в школах",
+        "iq_education_correlation": null,
+        "philosophy_thinker": "Платон, Сократ",
+        "philosophy_thesis": "Письменность ослабляет память, текст не может отвечать на вопросы — живой диалог (диалектика) выше любого письма"
+      },
+      "progress": {
+        "key_discoveries": ["Письменность", "Астрономия", "Математика", "Геометрия Евклида", "Гелиоцентризм", "Акведуки"],
+        "paradigm_shift_years": { "min": 100, "max": 350 },
+        "elite_mass_gap_score": 8,
+        "elite_mass_gap_label": "Огромный — грамотные философы vs. неграмотные рабы"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Феодальный",
+      "date_label": "V–XIV вв.",
+      "date_start": 400,
+      "date_end": 1400,
+      "population_mln": { "min": 250, "max": 350 },
+      "economy": {
+        "main_labor_type": "Сельский труд, ремесло",
+        "work_days_per_year": { "min": 130, "max": 150 },
+        "work_hours_per_year": { "min": 1300, "max": 1500 },
+        "intellectual_labor_pct": { "min": 1, "max": 2 },
+        "social_elevator_score": 2,
+        "social_elevator_label": "Только через церковь; университет — редкий лифт для незнатных"
+      },
+      "information": {
+        "literacy_pct": { "min": 4, "max": 13 },
+        "info_technologies": ["Рукописные книги", "Монастырские скриптории", "Университеты (с 1088)"],
+        "info_volume_avg_items": { "min": 0, "max": 1 },
+        "info_volume_elite_items": { "min": 30, "max": 125 }
+      },
+      "education": {
+        "institution": "Монастырские и соборные школы, ранние университеты (Болонья, Париж и др.)",
+        "knowledge_status": "Церковь — главный носитель знания; университет возникает как корпорация учёных и студентов внутри сословного общества",
+        "avg_person": "Церковное научение молитвам; цеховое ученичество",
+        "elite": "Монастырское образование, trivium → университет: теология, право, медицина; диспуты",
+        "real_effect_masses": "Крестьянство веками живёт в неизменном укладе — доступа к книгам нет",
+        "elite_progress": "Монахи сохраняют античное знание; схоласты систематизируют науку и логику",
+        "iq_education_correlation": null,
+        "philosophy_thinker": "Августин Блаженный; Фома Аквинский, Абеляр",
+        "philosophy_thesis": "Буква убивает, дух животворит; схоластический диспут важнее пассивного чтения — истина рождается в столкновении аргументов"
+      },
+      "progress": {
+        "key_discoveries": ["Сохранение античного знания", "Арабская алгебра", "Компас", "Порох", "Готика"],
+        "paradigm_shift_years": { "min": 75, "max": 300 },
+        "elite_mass_gap_score": 9,
+        "elite_mass_gap_label": "Максимальный: церковь vs. неграмотные крестьяне"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Абсолютизм",
+      "date_label": "XV–XVIII вв.",
+      "date_start": 1400,
+      "date_end": 1800,
+      "population_mln": { "min": 400, "max": 800 },
+      "economy": {
+        "main_labor_type": "Мануфактура, земледелие",
+        "intellectual_labor_pct": { "min": 3, "max": 5 },
+        "social_elevator_score": 4,
+        "social_elevator_label": "Расширяется: грамотность открывает торговлю и юриспруденцию"
+      },
+      "information": {
+        "literacy_pct": { "min": 16, "max": 53 },
+        "info_technologies": ["Печатный станок (1440)", "Газеты", "Энциклопедии"],
+        "info_volume_avg_items": { "min": 1, "max": 5 },
+        "info_volume_elite_items": { "min": 200, "max": 2000 }
+      },
+      "education": {
+        "institution": "Университеты под контролем монархии и церкви",
+        "knowledge_status": "Университеты готовят чиновников и духовенство; усиливается государственный контроль, но растут светские дисциплины",
+        "avg_person": "Приходские школы, Библия, счёт",
+        "elite": "Гимназии, академии, переписка учёных, энциклопедисты",
+        "real_effect_masses": "Печатный станок дал доступ к текстам, но чтение Библии не формировало критического мышления",
+        "elite_progress": "Энциклопедисты, Ньютон, Лейбниц: взрывной рост через переписку и академии",
+        "iq_education_correlation": null,
+        "philosophy_thinker": "Монтень, Коменский",
+        "philosophy_thesis": "Лучше голова хорошо устроенная, чем голова хорошо набитая — критика зубрёжки; обучение через действие и наблюдение"
+      },
+      "progress": {
+        "key_discoveries": ["Печатный станок", "Гелиоцентризм Коперника", "Ньютоновская механика"],
+        "paradigm_shift_years": { "min": 30, "max": 50 },
+        "elite_mass_gap_score": 7,
+        "elite_mass_gap_label": "Начинает сокращаться — печать распространяет идеи"
+      }
+    },
+    {
+      "id": 4,
+      "name": "Индустриализм",
+      "date_label": "XVII–XIX вв.",
+      "date_start": 1600,
+      "date_end": 1900,
+      "population_mln": { "min": 800, "max": 1200 },
+      "economy": {
+        "main_labor_type": "Заводской труд",
+        "work_hours_per_week": { "min": 70, "max": 70 },
+        "work_hours_per_year": { "min": 3640, "max": 3640 },
+        "intellectual_labor_pct": { "min": 5, "max": 10 },
+        "social_elevator_score": 5,
+        "social_elevator_label": "Образование = реальный лифт, но доступно немногим"
+      },
+      "information": {
+        "literacy_pct": { "min": 40, "max": 70 },
+        "info_technologies": ["Телеграф", "Газеты", "Массовые издания"],
+        "info_volume_avg_items": { "min": 5, "max": 20 },
+        "info_volume_elite_items": { "min": 500, "max": 5000 }
+      },
+      "education": {
+        "institution": "Классический (гумбольдтовский) исследовательский университет",
+        "knowledge_status": "Университет совмещает науку и обучение, служит индустриальному обществу: подготовка инженеров, врачей, учёных, развитие фундаментальных исследований",
+        "avg_person": "Массовые народные школы, обязательное начальное образование",
+        "elite": "Университеты, научные общества, журналы",
+        "real_effect_masses": "Массовая школа дала грамотность, но не интеллект — большинство читает ради развлечения",
+        "elite_progress": "Научные общества, журналы: кумулятивный прогресс ускоряется",
+        "iq_education_correlation": 0.63,
+        "philosophy_thinker": "Кант, Фихте, Шеллинг",
+        "philosophy_thesis": "Sapere aude — имей мужество пользоваться собственным умом; подлинное образование (Bildung) — самостоятельное воспроизведение знания, а не репродукция чужих слов"
+      },
+      "progress": {
+        "key_discoveries": ["Паровой двигатель", "Теория эволюции", "Электричество"],
+        "paradigm_shift_years": { "min": 20, "max": 30 },
+        "elite_mass_gap_score": 6,
+        "elite_mass_gap_label": "Сокращается, но медленно"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Империализм",
+      "date_label": "Кон. XIX в. — 1914",
+      "date_start": 1870,
+      "date_end": 1914,
+      "population_mln": { "min": 1400, "max": 1600 },
+      "economy": {
+        "main_labor_type": "Промышленный труд",
+        "intellectual_labor_pct": { "min": 10, "max": 15 },
+        "social_elevator_score": 7,
+        "social_elevator_label": "Массовая школа открывает путь в «белые воротнички»"
+      },
+      "information": {
+        "literacy_pct": { "min": 70, "max": 90 },
+        "info_technologies": ["Радио", "Телефон", "Массовая пресса"],
+        "info_volume_avg_items": { "min": 20, "max": 50 },
+        "info_volume_elite_items": { "min": 1000, "max": 10000 }
+      },
+      "education": {
+        "institution": "Крупные национальные университеты, технические вузы, колониальные и метропольные центры",
+        "knowledge_status": "Университеты обслуживают нужды империй (армия, администрация, наука для промышленности и военной сферы); усиливается национальная и идеологическая функция",
+        "avg_person": "Обязательная школа 4–8 лет, учебники",
+        "elite": "Университет + специализация, научные лаборатории",
+        "real_effect_masses": "Обязательная школа создала грамотных рабочих, а не мыслителей",
+        "elite_progress": "Университеты + лаборатории: Дарвин, Менделеев, Эйнштейн",
+        "iq_education_correlation": null,
+        "philosophy_thinker": "Ницше, Дьюи",
+        "philosophy_thesis": "Массовое образование штампует послушных работников, а не мыслителей; обучение через делание (learning by doing)"
+      },
+      "progress": {
+        "key_discoveries": ["Радио", "Рентген", "Теория относительности"],
+        "paradigm_shift_years": { "min": 10, "max": 20 },
+        "elite_mass_gap_score": 5,
+        "elite_mass_gap_label": "Средний"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Капитализм",
+      "date_label": "1914 — наст. время",
+      "date_start": 1914,
+      "date_end": 2026,
+      "population_mln": { "min": 1600, "max": 8000 },
+      "economy": {
+        "main_labor_type": "Смешанный: завод + офис",
+        "work_hours_per_year": { "min": 1949, "max": 1949 },
+        "intellectual_labor_pct": { "min": 30, "max": 40 },
+        "social_elevator_score": 8,
+        "social_elevator_label": "Высокий — диплом = стандартный лифт"
+      },
+      "information": {
+        "literacy_pct": { "min": 90, "max": 99 },
+        "info_technologies": ["Радио", "Телевидение", "Интернет"],
+        "info_volume_avg_items": { "min": 100, "max": 500 },
+        "info_volume_elite_items": { "min": 5000, "max": 50000 }
+      },
+      "education": {
+        "institution": "Массовый, предпринимательский университет, частные вузы",
+        "knowledge_status": "Университет всё больше зависит от рынка труда и капитала: массовое высшее образование, конкуренция, платные услуги, ориентация на эффективность и прикладные исследования",
+        "avg_person": "Всеобщее среднее образование, стандартные программы",
+        "elite": "Аспирантура, академические институты, научные сети",
+        "real_effect_masses": "Всеобщее образование снизило корреляцию IQ и учёбы — больше дипломов, не больше мышления",
+        "elite_progress": "НИИ, аспирантура: специализация углубляется",
+        "iq_education_correlation": 0.50,
+        "philosophy_thinker": "Дьюи, Фрейре",
+        "philosophy_thesis": "«Банковская модель» образования — когда учитель вкладывает знания в пассивного ученика — подавляет мышление"
+      },
+      "progress": {
+        "key_discoveries": ["Квантовая физика", "ДНК", "Компьютер", "Интернет"],
+        "paradigm_shift_years": { "min": 5, "max": 10 },
+        "elite_mass_gap_score": 4,
+        "elite_mass_gap_label": "Сокращается физически, растёт качественно"
+      }
+    },
+    {
+      "id": 7,
+      "name": "Информационное общество",
+      "date_label": "Кон. XX в. — наст. время",
+      "date_start": 1970,
+      "date_end": 2026,
+      "population_mln": { "min": 6000, "max": 8100 },
+      "economy": {
+        "main_labor_type": "Умственный / сервисный / цифровой",
+        "intellectual_labor_pct": { "min": 50, "max": 65 },
+        "social_elevator_score": 6,
+        "social_elevator_label": "Формально высокий, реально — диплом обесценивается; важны навыки"
+      },
+      "information": {
+        "literacy_pct": { "min": 84, "max": 88 },
+        "info_technologies": ["Интернет", "Социальные сети", "ИИ"],
+        "info_volume_avg_items": { "min": 12, "max": 12 },
+        "info_volume_avg_gb_per_day": { "min": 34, "max": 34 },
+        "info_volume_elite_items": { "min": 50, "max": 200 },
+        "total_books_exist_mln": 130,
+        "books_published_per_year_mln": 4,
+        "avg_book_sales_copies": 200
+      },
+      "education": {
+        "institution": "?",
+        "knowledge_status": "?",
+        "avg_person": "Смешанное обучение (онлайн + офлайн), самообучение через YouTube/ИИ",
+        "elite": "Непрерывное образование, MOOCs, ИИ-ассистенты, открытый доступ к науке",
+        "real_effect_masses": "Доступ к всей информации мира не поднял средний IQ — «парадокс Флинна» останавливается",
+        "elite_progress": "Открытая наука, ИИ-инструменты: элита прогрессирует быстрее чем когда-либо",
+        "iq_education_correlation": null,
+        "philosophy_thinker": "Талеб",
+        "philosophy_thesis": "Академическое чтение без практики — «интеллектуальный туризм»; важнее знать как думать, чем что знать; ценность приобретает умение задавать вопросы и синтезировать"
+      },
+      "progress": {
+        "key_discoveries": ["ИИ", "CRISPR", "Квантовые компьютеры"],
+        "paradigm_shift_years": { "min": 1, "max": 3 },
+        "elite_mass_gap_score": 7,
+        "elite_mass_gap_label": "Парадокс: доступ максимален, но понимание элиты недосягаемо для масс"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>История Человечества — v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;600&family=Rajdhani:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a1a;
+  --bg2: #0d0d22;
+  --cyan: #00f5ff;
+  --purple: #7b2fff;
+  --orange: #ff6b35;
+  --cyan-dim: rgba(0,245,255,0.15);
+  --purple-dim: rgba(123,47,255,0.15);
+  --cyan-glow: 0 0 8px #00f5ff, 0 0 20px rgba(0,245,255,0.4);
+  --purple-glow: 0 0 8px #7b2fff, 0 0 20px rgba(123,47,255,0.4);
+  --text: #d8e4f0;
+  --text-dim: #5a6a8a;
+  --border: rgba(0,245,255,0.12);
+  --border-strong: rgba(0,245,255,0.25);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', 'JetBrains Mono', monospace;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scanlines + noise */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,0.06) 2px 4px);
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanMove 10s linear infinite;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.5;
+}
+@keyframes scanMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 60px; }
+}
+
+/* Ambient glow blobs */
+.ambient-glow {
+  position: fixed;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 1;
+  animation: float 20s ease-in-out infinite;
+}
+.ambient-glow.a { background: var(--cyan); top: -200px; left: -200px; }
+.ambient-glow.b { background: var(--purple); bottom: -200px; right: -200px; animation-delay: -10s; }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(80px, 60px); }
+}
+
+/* ===== HEADER ===== */
+#header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 32px);
+  padding: 0 clamp(16px, 2vw, 32px);
+  height: clamp(56px, 6vh, 72px);
+  background: linear-gradient(180deg, rgba(10,10,26,0.98), rgba(10,10,26,0.85));
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 50;
+}
+#header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan) 30%, var(--purple) 70%, transparent);
+  opacity: 0.6;
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(11px, 1vw, 15px);
+  font-weight: 900;
+  letter-spacing: clamp(2px, 0.3vw, 5px);
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+  white-space: nowrap;
+}
+.logo span {
+  color: var(--purple);
+  text-shadow: var(--purple-glow);
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.tab-btn {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(9px, 0.85vw, 12px);
+  font-weight: 700;
+  letter-spacing: clamp(1.5px, 0.2vw, 3px);
+  padding: clamp(7px, 0.9vh, 11px) clamp(12px, 1.4vw, 22px);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.3s;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  white-space: nowrap;
+}
+.tab-btn:hover {
+  color: var(--cyan);
+  border-color: rgba(0,245,255,0.4);
+}
+.tab-btn.active {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: var(--cyan-dim);
+  box-shadow: var(--cyan-glow), inset 0 0 20px rgba(0,245,255,0.05);
+}
+
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(8px, 0.7vw, 11px);
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+.header-right .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: var(--cyan-glow);
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ===== TIMELINE ===== */
+#timeline-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+  z-index: 10;
+}
+
+#timeline {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+}
+
+.epoch-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: colRise 0.6s ease forwards;
+  position: relative;
+  transition: background 0.3s;
+}
+.epoch-col:first-child { border-left: 1px solid var(--border); }
+@keyframes colRise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.epoch-col:hover {
+  background: rgba(0,245,255,0.04);
+}
+.epoch-col:hover .col-header {
+  border-bottom-color: var(--cyan);
+}
+
+.epoch-col.highlighted {
+  background: rgba(0,245,255,0.06);
+}
+
+/* COL HEADER */
+.col-header {
+  padding: clamp(8px, 1vh, 14px) clamp(6px, 0.6vw, 12px) clamp(6px, 0.8vh, 10px);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(0,245,255,0.04) 0%, transparent 100%);
+  position: relative;
+  transition: border-color 0.3s;
+}
+
+.epoch-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(14px, 1.6vw, 24px);
+  font-weight: 900;
+  color: var(--cyan);
+  line-height: 1;
+  text-shadow: var(--cyan-glow);
+  letter-spacing: 1px;
+}
+.epoch-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(11px, 1.05vw, 16px);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+.epoch-dates {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(8px, 0.7vw, 10px);
+  color: var(--text-dim);
+  line-height: 1.3;
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+.epoch-pop {
+  font-size: clamp(9px, 0.85vw, 12px);
+  font-weight: 600;
+  color: var(--purple);
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.epoch-pop::before {
+  content: '◈';
+  font-size: 0.8em;
+}
+
+/* COL BODY */
+.col-body {
+  flex: 1;
+  padding: clamp(6px, 0.8vh, 12px) clamp(6px, 0.6vw, 10px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 0.7vh, 10px);
+  overflow: hidden;
+  min-height: 0;
+  position: relative;
+}
+
+.card-group {
+  display: none;
+  flex-direction: column;
+  gap: clamp(6px, 0.7vh, 10px);
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cyan) transparent;
+}
+.card-group::-webkit-scrollbar { width: 3px; }
+.card-group::-webkit-scrollbar-thumb { background: var(--cyan); }
+.card-group.active {
+  display: flex;
+  animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* DATA CARDS */
+.data-card {
+  background: rgba(0,245,255,0.03);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--cyan);
+  border-radius: 2px;
+  padding: clamp(6px, 0.7vh, 9px) clamp(6px, 0.6vw, 9px);
+  position: relative;
+}
+.data-card.purple { border-left-color: var(--purple); background: rgba(123,47,255,0.04); }
+.data-card.orange { border-left-color: var(--orange); background: rgba(255,107,53,0.04); }
+
+.card-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(7px, 0.65vw, 9px);
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+.card-value {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(10px, 0.95vw, 13px);
+  color: var(--text);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* BIG NUMBER */
+.big-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(18px, 2vw, 32px);
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+  line-height: 1;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* CIRCULAR GAUGE */
+.gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.gauge-svg {
+  width: clamp(64px, 6vw, 90px);
+  height: auto;
+  aspect-ratio: 2/1.1;
+  overflow: visible;
+}
+.gauge-track { fill: none; stroke: rgba(0,245,255,0.12); stroke-width: 5; stroke-linecap: round; }
+.gauge-fill {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 5;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px #00f5ff);
+  transition: stroke-dasharray 1.2s ease;
+}
+
+/* TECH BADGE */
+.tech-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 0.8vw, 11px);
+  font-weight: 600;
+  padding: clamp(4px, 0.5vh, 7px) clamp(6px, 0.6vw, 9px);
+  border: 1px solid rgba(0,245,255,0.4);
+  color: var(--cyan);
+  background: rgba(0,245,255,0.06);
+  border-radius: 1px;
+  box-shadow: 0 0 8px rgba(0,245,255,0.2);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+/* GAP BAR */
+.gap-bar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.gap-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  box-shadow: 0 0 10px var(--cyan);
+  transition: width 1s ease;
+}
+.gap-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(8px, 0.7vw, 10px);
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+.gap-val {
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+/* SOCIAL LIFT */
+.lift-scale {
+  position: relative;
+  height: clamp(20px, 2.2vh, 28px);
+  margin: 4px 0;
+}
+.lift-track {
+  position: absolute;
+  top: 50%;
+  left: 4px; right: 4px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(123,47,255,0.3), rgba(0,245,255,0.3));
+  transform: translateY(-50%);
+}
+.lift-dot {
+  position: absolute;
+  top: 50%;
+  width: clamp(10px, 1.1vw, 14px);
+  height: clamp(10px, 1.1vw, 14px);
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: var(--cyan-glow);
+  transform: translate(-50%, -50%);
+  transition: left 0.8s ease;
+  z-index: 2;
+}
+.lift-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid var(--cyan);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: liftPulse 2s ease infinite;
+}
+@keyframes liftPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.5); opacity: 0; }
+}
+.lift-labels {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: clamp(7px, 0.65vw, 9px);
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* VERTICAL BAR */
+.vbar-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: clamp(40px, 5vh, 60px);
+}
+.vbar-track {
+  width: clamp(14px, 1.4vw, 20px);
+  height: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(0,245,255,0.1);
+  border-radius: 2px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.vbar-fill {
+  width: 100%;
+  background: linear-gradient(0deg, var(--purple), var(--cyan));
+  box-shadow: 0 0 10px rgba(0,245,255,0.4);
+  border-radius: 1px;
+  transition: height 1s ease;
+  min-height: 3px;
+}
+.vbar-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(13px, 1.3vw, 19px);
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+}
+
+/* DISCOVERY ITEMS */
+.discovery-item {
+  display: flex;
+  gap: 6px;
+  font-size: clamp(10px, 0.9vw, 13px);
+  color: var(--text);
+  line-height: 1.35;
+  padding: 2px 0;
+  font-weight: 500;
+}
+.discovery-bullet {
+  color: var(--cyan);
+  flex-shrink: 0;
+  font-weight: 700;
+  text-shadow: var(--cyan-glow);
+}
+
+/* PARADIGM SPEED */
+.speed-track {
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.speed-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple) 0%, var(--cyan) 100%);
+  box-shadow: 0 0 12px rgba(0,245,255,0.5);
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+.speed-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 0.8vw, 11px);
+  font-weight: 600;
+  color: var(--cyan);
+  margin-top: 4px;
+}
+
+/* GAP METER (elite vs mass) */
+.gap-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.gap-node {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(8px, 0.75vw, 10px);
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 8px;
+  border-radius: 1px;
+  text-align: center;
+  white-space: nowrap;
+}
+.gap-node.elite {
+  color: var(--cyan);
+  border: 1px solid rgba(0,245,255,0.5);
+  background: rgba(0,245,255,0.08);
+  text-shadow: var(--cyan-glow);
+}
+.gap-node.mass {
+  color: var(--purple);
+  border: 1px solid rgba(123,47,255,0.5);
+  background: rgba(123,47,255,0.08);
+  text-shadow: var(--purple-glow);
+}
+.gap-line {
+  width: 2px;
+  background: linear-gradient(180deg, var(--cyan), var(--purple));
+  opacity: 0.6;
+  box-shadow: 0 0 6px var(--cyan);
+  transition: height 1s ease;
+}
+
+/* PHILOSOPHER QUOTE CARD */
+.philosopher-card {
+  background: linear-gradient(135deg, rgba(123,47,255,0.1), rgba(0,245,255,0.04));
+  border: 1px solid rgba(123,47,255,0.35);
+  border-radius: 2px;
+  padding: clamp(7px, 0.8vh, 11px);
+  position: relative;
+  flex: 1;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.philosopher-card::before {
+  content: '"';
+  position: absolute;
+  top: -10px; left: 6px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3vw, 48px);
+  color: var(--purple);
+  opacity: 0.35;
+  line-height: 1;
+  font-weight: 700;
+}
+.philosopher-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(8px, 0.75vw, 10px);
+  font-weight: 700;
+  color: var(--purple);
+  letter-spacing: 1px;
+  text-shadow: var(--purple-glow);
+}
+.philosopher-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(10px, 0.95vw, 14px);
+  color: var(--text);
+  line-height: 1.4;
+  flex: 1;
+}
+.philosopher-null {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 0.8vw, 11px);
+  color: var(--text-dim);
+  text-align: center;
+  padding: 12px 0;
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 2px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== PARADOX CHART ===== */
+#paradox {
+  flex-shrink: 0;
+  height: clamp(160px, 22vh, 220px);
+  background: linear-gradient(180deg, rgba(10,10,26,0.6), rgba(13,13,34,0.98));
+  border-top: 1px solid var(--border-strong);
+  padding: clamp(10px, 1.2vh, 16px) clamp(16px, 2vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 20;
+}
+
+#paradox::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan) 20%, var(--purple) 80%, transparent);
+  opacity: 0.6;
+}
+
+.paradox-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.paradox-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(11px, 1vw, 14px);
+  font-weight: 900;
+  letter-spacing: clamp(2px, 0.35vw, 4px);
+  color: var(--purple);
+  text-shadow: var(--purple-glow);
+}
+.paradox-title span {
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+}
+
+.paradox-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(10px, 0.9vw, 13px);
+  color: var(--text-dim);
+  flex: 1;
+  text-align: center;
+}
+
+.paradox-legend {
+  display: flex;
+  gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(9px, 0.8vw, 11px);
+  color: var(--text);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-line {
+  width: 18px; height: 2px;
+  border-radius: 1px;
+}
+.legend-line.cyan { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+.legend-line.purple { background: var(--purple); box-shadow: 0 0 6px var(--purple); border-top: 1px dashed var(--purple); height: 0; border-radius: 0; }
+
+.paradox-chart {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+
+#paradox-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.axis-label {
+  fill: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+
+.grid-line {
+  stroke: rgba(255,255,255,0.05);
+  stroke-width: 1;
+  stroke-dasharray: 2,3;
+}
+
+.chart-line {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.chart-line.cyan { stroke: var(--cyan); }
+.chart-line.purple { stroke: var(--purple); stroke-dasharray: 5,3; }
+
+.chart-area {
+  opacity: 0.15;
+}
+
+.chart-point {
+  cursor: pointer;
+  transition: r 0.3s, filter 0.3s;
+}
+.chart-point.cyan { fill: var(--cyan); filter: drop-shadow(0 0 4px var(--cyan)); }
+.chart-point.purple { fill: var(--purple); filter: drop-shadow(0 0 4px var(--purple)); }
+
+.chart-point.active {
+  filter: drop-shadow(0 0 12px currentColor);
+}
+
+.chart-marker-line {
+  stroke: rgba(255,255,255,0.2);
+  stroke-width: 1;
+  stroke-dasharray: 2,2;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.chart-marker-line.visible { opacity: 1; }
+
+.x-axis-tick {
+  cursor: pointer;
+}
+.x-axis-tick text {
+  fill: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(8px, 0.75vw, 10px);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: fill 0.2s;
+}
+.x-axis-tick:hover text,
+.x-axis-tick.active text {
+  fill: var(--cyan);
+}
+
+/* TOOLTIP */
+.chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(10,10,26,0.95);
+  border: 1px solid var(--cyan);
+  box-shadow: var(--cyan-glow);
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+  transform: translate(-50%, -120%);
+  z-index: 100;
+}
+.chart-tooltip.visible { opacity: 1; }
+.chart-tooltip .ttl-cyan { color: var(--cyan); }
+.chart-tooltip .ttl-purple { color: var(--purple); }
+
+/* Edu layout */
+.edu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+/* Mobile fallback */
+@media (max-width: 800px) {
+  #timeline {
+    overflow-x: auto;
+  }
+  .epoch-col {
+    flex: 0 0 140px;
+  }
+  .header-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="ambient-glow a"></div>
+<div class="ambient-glow b"></div>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="logo">ИСТОРИЯ <span>ЧЕЛОВЕЧЕСТВА</span></div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-tab="info">ИНФОСРЕДА</button>
+    <button class="tab-btn" data-tab="edu">ОБРАЗОВАНИЕ</button>
+    <button class="tab-btn" data-tab="eco">ЭКОНОМИКА</button>
+    <button class="tab-btn" data-tab="prog">ПРОГРЕСС</button>
+  </div>
+  <div class="header-right">
+    <div class="dot"></div>
+    <span>13 ЭПОХ · 2 МЛН ЛЕТ</span>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div id="timeline-wrap">
+  <div id="timeline"></div>
+</div>
+
+<!-- PARADOX CHART -->
+<div id="paradox">
+  <div class="paradox-head">
+    <div class="paradox-title">ПАРАДОКС <span>ПЛАТОНА</span></div>
+    <div class="paradox-sub">«Текст без диалога не делает людей умнее — он создаёт лишь иллюзию образованности»</div>
+    <div class="paradox-legend">
+      <div class="legend-item"><span class="legend-line cyan"></span>Грамотность населения</div>
+      <div class="legend-item"><span class="legend-line purple"></span>Реальный интеллект масс</div>
+    </div>
+  </div>
+  <div class="paradox-chart">
+    <svg id="paradox-svg" viewBox="0 0 1200 200" preserveAspectRatio="none"></svg>
+    <div class="chart-tooltip" id="tooltip"></div>
+  </div>
+</div>
+
+<script>
+const EPOCHS = [
+  { id:1, short:"Праобщ.", name:"Праобщество", dates:"~2 млн — 40 тыс. до н.э.", population:"100–300 тыс.",
+    literacy:0, infoTech:"—", infoAvg:"Только устные предания", infoElite:"То же, чуть больше", eliteGap:1, massIntel:1,
+    eduAvg:"Имитация взрослых", eduElite:"Нет элиты", massEffect:"—", eliteProgress:"—", philosopher:null,
+    laborType:"Охота, собирательство", intellectualLabor:0, socialLift:1, socialLiftLabel:"Закрыт",
+    discoveries:["Огонь","Каменные орудия"], paradigmSpeed:"Тысячелетия", paradigmSpeedNum:1, eliteMassGap:1 },
+  { id:2, short:"Перв. стадо", name:"Первобытное стадо", dates:"~40–15 тыс. до н.э.", population:"1–2 млн",
+    literacy:0, infoTech:"Язык", infoAvg:"10–50 устных историй", infoElite:"100–200 устных текстов", eliteGap:2, massIntel:1,
+    eduAvg:"Передача навыков устно", eduElite:"Шаман: ученичество, ритуалы", massEffect:"Знания не накапливаются между поколениями", eliteProgress:"Шаман: уникальный ритуальный опыт", philosopher:null,
+    laborType:"Охота, собирательство", intellectualLabor:0.1, socialLift:1, socialLiftLabel:"Через магический авторитет",
+    discoveries:["Лук","Игла","Одежда"], paradigmSpeed:"Тысячи лет", paradigmSpeedNum:1, eliteMassGap:2 },
+  { id:3, short:"Род. общ.", name:"Родовая община", dates:"~15–3 тыс. до н.э.", population:"10–50 млн",
+    literacy:0, infoTech:"Наскальные рисунки", infoAvg:"50–100 устных текстов", infoElite:"200–500 текстов", eliteGap:3, massIntel:1.2,
+    eduAvg:"Обряды инициации, обучение в роде", eduElite:"Жрец: тайные знания", massEffect:"Знания ограничены радиусом рода", eliteProgress:"Жрецы: монополия на тайное знание", philosopher:null,
+    laborType:"Земледелие, скотоводство", intellectualLabor:0.5, socialLift:1, socialLiftLabel:"Только через жречество",
+    discoveries:["Колесо","Гончарство","Металл"], paradigmSpeed:"Сотни лет", paradigmSpeedNum:2, eliteMassGap:3 },
+  { id:4, short:"Раннераб.", name:"Раннерабовлад.", dates:"~3500–1000 до н.э.", population:"50–100 млн",
+    literacy:2, infoTech:"Алфавит, письменность", infoAvg:"0 книг (97% безгр.)", infoElite:"20–100 свитков", eliteGap:5, massIntel:1.3,
+    eduAvg:"Труд в семье, школ нет", eduElite:"Храмовые и дворцовые школы", massEffect:"97% живут вне письменной культуры", eliteProgress:"Писцы, жрецы: систематизация знаний", philosopher:null,
+    laborType:"Рабский труд, земледелие", intellectualLabor:1, socialLift:2, socialLiftLabel:"Стать писцом — редкий шанс",
+    discoveries:["Письменность","Астрономия","Математика"], paradigmSpeed:"Сотни лет", paradigmSpeedNum:2, eliteMassGap:5 },
+  { id:5, short:"Разв. раб.", name:"Развитой рабовлад.", dates:"~1000 до н.э. — II в. н.э.", population:"170–300 млн",
+    literacy:12, infoTech:"Библиотека Александрии", infoAvg:"0–1 текст (90% безгр.)", infoElite:"100–1000 свитков", eliteGap:7, massIntel:1.5,
+    eduAvg:"Устное ремесло, изредка чтение", eduElite:"Академия Платона, Ликей", massEffect:"Рост грамотности не повысил статус большинства", eliteProgress:"Платон, Аристотель, Архимед",
+    philosopher:{name:"Платон / Сократ", quote:"Письменность ослабляет память, текст не отвечает на вопросы. Знание рождается только в беседе, не в чтении."},
+    laborType:"Рабский труд, ремесло", intellectualLabor:2.5, socialLift:3, socialLiftLabel:"Отпущенники, риторы — редко",
+    discoveries:["Геометрия Евклида","Гелиоцентризм","Акведуки"], paradigmSpeed:"100–200 лет", paradigmSpeedNum:3, eliteMassGap:7 },
+  { id:6, short:"Ранн. феод.", name:"Раннефеодальный", dates:"V–IX вв.", population:"200–300 млн",
+    literacy:3, infoTech:"Рукописные книги", infoAvg:"0 книг (95% безгр.)", infoElite:"10–50 книг", eliteGap:8, massIntel:1.4,
+    eduAvg:"Молитвы, труд", eduElite:"Trivium в монастырях", massEffect:"Крестьянство веками в неизменном укладе", eliteProgress:"Монахи: сохранение античного знания",
+    philosopher:{name:"Августин Блаженный", quote:"Буква убивает, дух животворит — понимание важнее заучивания текста."},
+    laborType:"Сельский труд, война", intellectualLabor:1, socialLift:1, socialLiftLabel:"Только через церковь",
+    discoveries:["Сохранение античного знания","Арабская алгебра"], paradigmSpeed:"Векá", paradigmSpeedNum:2, eliteMassGap:8 },
+  { id:7, short:"Разв. феод.", name:"Развитой феодализм", dates:"X–XIV вв.", population:"300–400 млн",
+    literacy:12, infoTech:"Университеты (1088)", infoAvg:"0 книг (90% безгр.)", infoElite:"50–200 книг", eliteGap:8, massIntel:1.6,
+    eduAvg:"Цеховое ученичество, приход", eduElite:"Университет: теология, диспуты", massEffect:"Школы не изменили положение крестьян", eliteProgress:"Схоласты: логика, теология, наука",
+    philosopher:{name:"Фома Аквинский / Абеляр", quote:"Истина рождается в столкновении аргументов. «Sic et Non»: противоречия требуют самостоятельного суждения."},
+    laborType:"Земледелие, ремесло", intellectualLabor:2.5, socialLift:2, socialLiftLabel:"Университет — редкий лифт",
+    discoveries:["Схоластика","Компас","Порох"], paradigmSpeed:"50–100 лет", paradigmSpeedNum:4, eliteMassGap:8 },
+  { id:8, short:"Поздн. феод.", name:"Поздний феодализм", dates:"XV–XVIII вв.", population:"400–800 млн",
+    literacy:35, infoTech:"Печатный станок (1440)", infoAvg:"1–5 книг", infoElite:"200–2000 книг", eliteGap:7, massIntel:2,
+    eduAvg:"Приходские школы, Библия", eduElite:"Гимназии, академии", massEffect:"Печать дала доступ, но не критическое мышление", eliteProgress:"Ньютон, Лейбниц: рост через академии",
+    philosopher:{name:"Монтень / Коменский", quote:"«Лучше голова, хорошо устроенная, чем хорошо набитая». Обучение через действие, а не повторение."},
+    laborType:"Мануфактура, земледелие", intellectualLabor:4, socialLift:4, socialLiftLabel:"Грамотность открывает торговлю",
+    discoveries:["Книгопечатание","Гелиоцентризм Коперника","Механика Ньютона"], paradigmSpeed:"30–50 лет", paradigmSpeedNum:5, eliteMassGap:7 },
+  { id:9, short:"Ранн. кап.", name:"Ранний капитализм", dates:"XVII–XIX вв.", population:"0,8–1,2 млрд",
+    literacy:55, infoTech:"Телеграф, газеты", infoAvg:"5–20 книг + газеты", infoElite:"500–5000 книг", eliteGap:7, massIntel:2.5,
+    eduAvg:"Народные школы, обязательное начальное обр.", eduElite:"Университеты, научные общества", massEffect:"Грамотность дана, но не интеллект", eliteProgress:"Кумулятивный прогресс через журналы",
+    philosopher:{name:"Кант / Фихте", quote:"«Sapere aude» — имей мужество пользоваться своим умом. Зубрёжка создаёт рабов духа."},
+    laborType:"Заводской труд (~70 ч/нед)", intellectualLabor:7, socialLift:5, socialLiftLabel:"Лифт, но доступен немногим",
+    discoveries:["Паровой двигатель","Эволюция","Электричество"], paradigmSpeed:"20–30 лет", paradigmSpeedNum:6, eliteMassGap:7 },
+  { id:10, short:"Импер.", name:"Империализм", dates:"Кон. XIX в. — 1914", population:"1,6 млрд",
+    literacy:80, infoTech:"Радио, телефон, пресса", infoAvg:"20–50 книг + газеты", infoElite:"1000–10000 книг", eliteGap:6, massIntel:3,
+    eduAvg:"Обязательная школа 4–8 лет", eduElite:"Университет + лаборатории", massEffect:"Школа создала грамотных рабочих, а не мыслителей", eliteProgress:"Дарвин, Менделеев, Эйнштейн",
+    philosopher:{name:"Ницше / Дьюи", quote:"Массовое образование штампует послушных работников. Learning by doing — пассивное чтение не формирует компетенции."},
+    laborType:"Промышленный труд", intellectualLabor:12, socialLift:6, socialLiftLabel:"Путь в «белые воротнички»",
+    discoveries:["Радио","Рентген","Теория относительности"], paradigmSpeed:"10–20 лет", paradigmSpeedNum:7, eliteMassGap:6 },
+  { id:11, short:"Гос.-моноп.", name:"Гос.-моноп. капитализм", dates:"1914 — наст. время", population:"1,6 → 8+ млрд",
+    literacy:94, infoTech:"Радио, ТВ, Интернет", infoAvg:"100–500 книг + ТВ", infoElite:"5000–50000 материалов", eliteGap:8, massIntel:3.2,
+    eduAvg:"Всеобщее среднее образование", eduElite:"Аспирантура, научные сети", massEffect:"Корреляция IQ/учёба: 0.63 → 0.50. Больше дипломов — не больше мышления", eliteProgress:"НИИ, специализация углубляется",
+    philosopher:{name:"Дьюи / Фрейре", quote:"«Банковская модель» образования подавляет мышление. Школа-фабрика убивает критическое мышление."},
+    laborType:"Смешанный: завод + офис", intellectualLabor:35, socialLift:8, socialLiftLabel:"Диплом = стандартный лифт",
+    discoveries:["Квантовая физика","ДНК","Компьютер"], paradigmSpeed:"5–10 лет", paradigmSpeedNum:8, eliteMassGap:8 },
+  { id:12, short:"СССР", name:"Социализм (СССР)", dates:"1917–1991", population:"2,5–5,3 млрд",
+    literacy:99, infoTech:"Радио, ТВ", infoAvg:"200–600 книг", infoElite:"3000–30000 книг", eliteGap:6, massIntel:3.5,
+    eduAvg:"Всеобщее бесплатное образование", eduElite:"Академия наук, НИИ, спецшколы", massEffect:"Грамотность + зубрёжка = широкие знания, но слабое мышление", eliteProgress:"Точные науки на мировом уровне",
+    philosopher:{name:"Выготский", quote:"Зона ближайшего развития — знание усваивается через активное действие, не через текст."},
+    laborType:"Индустриальный + плановый", intellectualLabor:30, socialLift:7, socialLiftLabel:"Высокий через техн. специальности",
+    discoveries:["Космос","Ядерная физика","Кибернетика"], paradigmSpeed:"5–10 лет", paradigmSpeedNum:8, eliteMassGap:6 },
+  { id:13, short:"Постинд.", name:"Постиндустриальное", dates:"Кон. XX в. — наст. время", population:"6 → 8,1 млрд",
+    literacy:86, infoTech:"Интернет, соцсети, ИИ", infoAvg:"~12 книг/год + 34 ГБ/день", infoElite:"50–200 книг/год + терабайты", eliteGap:10, massIntel:3.3,
+    eduAvg:"YouTube, ИИ, онлайн-курсы", eduElite:"MOOCs, открытая наука, ИИ-инструменты", massEffect:"ПАРАДОКС: доступ к всей информации не поднял IQ — «парадокс Флинна» останавливается", eliteProgress:"ИИ-инструменты: элита прогрессирует быстрее, чем когда-либо",
+    philosopher:{name:"Талеб / Метапознание", quote:"Чтение без практики — «интеллектуальный туризм». Ценность: умение задавать вопросы и синтезировать. Платон был прав."},
+    laborType:"Умственный / цифровой", intellectualLabor:55, socialLift:7, socialLiftLabel:"Формально высокий — диплом обесценивается",
+    discoveries:["ИИ","CRISPR","Квантовые компьютеры"], paradigmSpeed:"Менее 2–3 лет", paradigmSpeedNum:10, eliteMassGap:10 }
+];
+
+let activeTab = 'info';
+
+// ====== GAUGE SVG ======
+function gaugeSVG(pct) {
+  const r = 30;
+  const circ = 2 * Math.PI * r;
+  const half = circ / 2;
+  const fill = (pct / 100) * half;
+  return `<svg class="gauge-svg" viewBox="0 0 80 48">
+    <path class="gauge-track" d="M 8 42 A ${r} ${r} 0 0 1 72 42" stroke-dasharray="${half} ${circ}"/>
+    <path class="gauge-fill" d="M 8 42 A ${r} ${r} 0 0 1 72 42"
+      stroke-dasharray="0 ${circ}"
+      data-target="${fill} ${circ}"/>
+    <text x="40" y="34" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="16" fill="#00f5ff" style="filter:drop-shadow(0 0 6px #00f5ff)">${pct}%</text>
+  </svg>`;
+}
+
+// ====== CARD BUILDERS ======
+function buildInfo(e) {
+  return `
+    <div class="data-card">
+      <div class="card-label">ГРАМОТНОСТЬ</div>
+      <div class="gauge-wrap">${gaugeSVG(e.literacy)}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">ТЕХНОЛОГИЯ</div>
+      <div class="tech-badge">${e.infoTech}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">У МАСС</div>
+      <div class="card-value">${e.infoAvg}</div>
+    </div>
+    <div class="data-card purple">
+      <div class="card-label">У ЭЛИТЫ</div>
+      <div class="card-value">${e.infoElite}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">РАЗРЫВ</div>
+      <div class="gap-bar-track"><div class="gap-bar-fill" style="width:${e.eliteGap*10}%"></div></div>
+      <div class="gap-row"><span>МИН</span><span class="gap-val">${e.eliteGap}/10</span><span>МАКС</span></div>
+    </div>`;
+}
+
+function buildEdu(e) {
+  return `
+    <div class="data-card">
+      <div class="card-label">МАССЫ</div>
+      <div class="card-value">${e.eduAvg}</div>
+    </div>
+    <div class="data-card purple">
+      <div class="card-label">ЭЛИТА</div>
+      <div class="card-value">${e.eduElite}</div>
+    </div>
+    <div class="data-card orange">
+      <div class="card-label">РЕАЛЬНЫЙ ЭФФЕКТ</div>
+      <div class="card-value">${e.massEffect}</div>
+    </div>
+    ${e.philosopher ? `
+      <div class="philosopher-card">
+        <div class="philosopher-name">◈ ${e.philosopher.name}</div>
+        <div class="philosopher-quote">${e.philosopher.quote}</div>
+      </div>` : `<div class="philosopher-null">нет данных</div>`}`;
+}
+
+function buildEco(e) {
+  const liftPct = ((e.socialLift - 1) / 9) * 100;
+  return `
+    <div class="data-card">
+      <div class="card-label">ТИП ТРУДА</div>
+      <div class="card-value">${e.laborType}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">ИНТЕЛЛ. ТРУД</div>
+      <div class="vbar-wrap">
+        <div class="vbar-track">
+          <div class="vbar-fill" style="height:${Math.max(e.intellectualLabor, 0.5)}%"></div>
+        </div>
+        <div class="vbar-num">${e.intellectualLabor}%</div>
+      </div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">СОЦ. ЛИФТ</div>
+      <div class="lift-scale">
+        <div class="lift-track"></div>
+        <div class="lift-dot" style="left:${liftPct}%"></div>
+        <div class="lift-labels"><span>0</span><span>10</span></div>
+      </div>
+      <div class="card-value" style="font-size: clamp(9px, 0.8vw, 11px); margin-top: 4px;">${e.socialLiftLabel}</div>
+    </div>`;
+}
+
+function buildProg(e) {
+  const gapH = e.eliteMassGap * 4 + 10;
+  return `
+    <div class="data-card">
+      <div class="card-label">ОТКРЫТИЯ</div>
+      ${e.discoveries.map(d => `<div class="discovery-item"><span class="discovery-bullet">▸</span>${d}</div>`).join('')}
+    </div>
+    <div class="data-card">
+      <div class="card-label">СКОРОСТЬ ПАРАДИГМ</div>
+      <div class="speed-track"><div class="speed-fill" style="width:${e.paradigmSpeedNum*10}%"></div></div>
+      <div class="speed-label">${e.paradigmSpeed}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">РАЗРЫВ ЭЛИТА–МАССЫ</div>
+      <div class="gap-meter">
+        <div class="gap-node elite">ЭЛИТА</div>
+        <div class="gap-line" style="height:${gapH}px"></div>
+        <div class="gap-node mass">МАССЫ</div>
+      </div>
+    </div>`;
+}
+
+// ====== RENDER TIMELINE ======
+const timeline = document.getElementById('timeline');
+
+EPOCHS.forEach((e, idx) => {
+  const col = document.createElement('div');
+  col.className = 'epoch-col';
+  col.style.animationDelay = `${idx * 50}ms`;
+  col.dataset.idx = idx;
+  col.innerHTML = `
+    <div class="col-header">
+      <div class="epoch-num">${String(e.id).padStart(2,'0')}</div>
+      <div class="epoch-name">${e.short}</div>
+      <div class="epoch-dates">${e.dates}</div>
+      <div class="epoch-pop">${e.population}</div>
+    </div>
+    <div class="col-body">
+      <div class="card-group active" data-tab="info">${buildInfo(e)}</div>
+      <div class="card-group" data-tab="edu">${buildEdu(e)}</div>
+      <div class="card-group" data-tab="eco">${buildEco(e)}</div>
+      <div class="card-group" data-tab="prog">${buildProg(e)}</div>
+    </div>`;
+  timeline.appendChild(col);
+
+  // Hover sync with chart
+  col.addEventListener('mouseenter', () => highlightChart(idx));
+  col.addEventListener('mouseleave', () => unhighlightChart());
+});
+
+// ====== TABS ======
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    if (tab === activeTab) return;
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cols = document.querySelectorAll('.epoch-col');
+    cols.forEach((col, idx) => {
+      setTimeout(() => {
+        col.querySelectorAll('.card-group').forEach(g => g.classList.remove('active'));
+        const next = col.querySelector(`.card-group[data-tab="${tab}"]`);
+        if (next) next.classList.add('active');
+      }, idx * 25);
+    });
+
+    activeTab = tab;
+    setTimeout(animateGauges, 200);
+  });
+});
+
+function animateGauges() {
+  document.querySelectorAll('.card-group.active .gauge-fill').forEach(el => {
+    const td = el.getAttribute('data-target');
+    if (td) {
+      el.style.strokeDasharray = '0 1000';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.strokeDasharray = td;
+        });
+      });
+    }
+  });
+}
+
+// ====== PARADOX CHART ======
+const svg = document.getElementById('paradox-svg');
+const tooltip = document.getElementById('tooltip');
+const W = 1200, H = 200;
+const PAD = { l: 50, r: 30, t: 14, b: 38 };
+const cw = W - PAD.l - PAD.r;
+const ch = H - PAD.t - PAD.b;
+
+const xOf = i => PAD.l + (i / (EPOCHS.length - 1)) * cw;
+const yOf = v => PAD.t + ch - (v / 100) * ch;
+
+const litPts = EPOCHS.map((e,i) => [xOf(i), yOf(e.literacy)]);
+const massPts = EPOCHS.map((e,i) => [xOf(i), yOf(e.massIntel * 10)]); // scale x10 for visibility
+
+const polyStr = pts => pts.map(p => p.join(',')).join(' ');
+const pathStr = pts => 'M ' + pts.map(p => p.join(' ')).join(' L ');
+
+// Grid lines
+let svgHTML = '';
+for (let p = 0; p <= 100; p += 25) {
+  const y = yOf(p);
+  svgHTML += `<line class="grid-line" x1="${PAD.l}" y1="${y}" x2="${W - PAD.r}" y2="${y}"/>`;
+  svgHTML += `<text x="${PAD.l - 8}" y="${y + 3}" text-anchor="end" class="axis-label">${p}%</text>`;
+}
+
+// Areas under lines (filled)
+const litArea = `${pathStr(litPts)} L ${xOf(12)} ${yOf(0)} L ${xOf(0)} ${yOf(0)} Z`;
+const massArea = `${pathStr(massPts)} L ${xOf(12)} ${yOf(0)} L ${xOf(0)} ${yOf(0)} Z`;
+
+svgHTML += `<path d="${litArea}" fill="url(#cyanGrad)" class="chart-area"/>`;
+svgHTML += `<path d="${massArea}" fill="url(#purpleGrad)" class="chart-area"/>`;
+
+// Gradients
+svgHTML += `<defs>
+  <linearGradient id="cyanGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#00f5ff" stop-opacity="0.6"/>
+    <stop offset="100%" stop-color="#00f5ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#7b2fff" stop-opacity="0.4"/>
+    <stop offset="100%" stop-color="#7b2fff" stop-opacity="0"/>
+  </linearGradient>
+</defs>`;
+
+// Lines
+const litPath = pathStr(litPts);
+const massPath = pathStr(massPts);
+svgHTML += `<path id="lit-line" class="chart-line cyan" d="${litPath}"/>`;
+svgHTML += `<path id="mass-line" class="chart-line purple" d="${massPath}"/>`;
+
+// Marker vertical line (hover)
+svgHTML += `<line class="chart-marker-line" id="marker-line" y1="${PAD.t}" y2="${H - PAD.b}"/>`;
+
+// Points + X-axis ticks
+EPOCHS.forEach((e, i) => {
+  const x = xOf(i);
+  const yL = yOf(e.literacy);
+  const yM = yOf(e.massIntel * 10);
+
+  svgHTML += `<circle class="chart-point cyan" data-idx="${i}" data-type="literacy" cx="${x}" cy="${yL}" r="4"/>`;
+  svgHTML += `<circle class="chart-point purple" data-idx="${i}" data-type="mass" cx="${x}" cy="${yM}" r="4"/>`;
+
+  // X-axis label
+  svgHTML += `<g class="x-axis-tick" data-idx="${i}" transform="translate(${x}, ${H - PAD.b + 14})">
+    <text text-anchor="middle">${String(e.id).padStart(2,'0')}</text>
+    <text y="14" text-anchor="middle" font-size="8" opacity="0.7">${e.short}</text>
+  </g>`;
+});
+
+svg.innerHTML = svgHTML;
+
+// Animate line drawing
+function animateChartLines() {
+  ['#lit-line', '#mass-line'].forEach((sel, i) => {
+    const path = svg.querySelector(sel);
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = len;
+    path.style.transition = 'stroke-dashoffset 2s ease';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          path.style.strokeDashoffset = '0';
+        }, i * 400);
+      });
+    });
+  });
+}
+
+// Highlight functions
+const markerLine = document.getElementById('marker-line');
+
+function highlightChart(idx) {
+  const x = xOf(idx);
+  markerLine.setAttribute('x1', x);
+  markerLine.setAttribute('x2', x);
+  markerLine.classList.add('visible');
+
+  svg.querySelectorAll('.chart-point').forEach(pt => {
+    if (pt.dataset.idx == idx) {
+      pt.classList.add('active');
+      pt.setAttribute('r', 6);
+    } else {
+      pt.setAttribute('r', 3);
+    }
+  });
+  svg.querySelectorAll('.x-axis-tick').forEach(t => {
+    t.classList.toggle('active', t.dataset.idx == idx);
+  });
+
+  // Tooltip
+  const e = EPOCHS[idx];
+  const rect = svg.getBoundingClientRect();
+  const containerRect = document.querySelector('.paradox-chart').getBoundingClientRect();
+  const xPx = (x / W) * rect.width;
+  const yPx = (yOf(e.literacy) / H) * rect.height;
+  tooltip.style.left = xPx + 'px';
+  tooltip.style.top = yPx + 'px';
+  tooltip.innerHTML = `
+    <div style="font-weight:700;color:#fff;margin-bottom:3px">${e.short}</div>
+    <div><span class="ttl-cyan">●</span> Грамотность: <b>${e.literacy}%</b></div>
+    <div><span class="ttl-purple">●</span> Интеллект масс: <b>~${e.massIntel*10}%</b></div>
+  `;
+  tooltip.classList.add('visible');
+}
+
+function unhighlightChart() {
+  markerLine.classList.remove('visible');
+  svg.querySelectorAll('.chart-point').forEach(pt => {
+    pt.classList.remove('active');
+    pt.setAttribute('r', 4);
+  });
+  svg.querySelectorAll('.x-axis-tick').forEach(t => t.classList.remove('active'));
+  tooltip.classList.remove('visible');
+}
+
+// Chart hover interactions
+svg.querySelectorAll('.chart-point, .x-axis-tick').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    const idx = parseInt(el.dataset.idx, 10);
+    highlightChart(idx);
+    const col = timeline.querySelector(`.epoch-col[data-idx="${idx}"]`);
+    if (col) col.classList.add('highlighted');
+  });
+  el.addEventListener('mouseleave', () => {
+    unhighlightChart();
+    document.querySelectorAll('.epoch-col.highlighted').forEach(c => c.classList.remove('highlighted'));
+  });
+});
+
+// When column is hovered, also highlight on chart
+timeline.querySelectorAll('.epoch-col').forEach(col => {
+  col.addEventListener('mouseenter', () => col.classList.add('highlighted'));
+  col.addEventListener('mouseleave', () => col.classList.remove('highlighted'));
+});
+
+// Initial animations
+window.addEventListener('load', () => {
+  setTimeout(animateGauges, 600);
+  setTimeout(animateChartLines, 900);
+});
+setTimeout(animateGauges, 300);
+setTimeout(animateChartLines, 600);
+</script>
+</body>
+</html>

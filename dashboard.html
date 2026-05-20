@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>История Человечества</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;600&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a1a;
+  --bg2: #0d0d22;
+  --cyan: #00f5ff;
+  --purple: #7b2fff;
+  --cyan-dim: rgba(0,245,255,0.15);
+  --purple-dim: rgba(123,47,255,0.15);
+  --cyan-glow: 0 0 8px #00f5ff, 0 0 20px rgba(0,245,255,0.4);
+  --purple-glow: 0 0 8px #7b2fff, 0 0 20px rgba(123,47,255,0.4);
+  --text: #c8d8e8;
+  --text-dim: #4a5a7a;
+  --border: rgba(0,245,255,0.12);
+  --col-width: 200px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanlines */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanMove 8s linear infinite;
+}
+
+@keyframes scanMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+
+/* Noise texture overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.4;
+}
+
+/* HEADER */
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: linear-gradient(180deg, rgba(10,10,26,0.98) 0%, rgba(10,10,26,0.92) 100%);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 64px;
+}
+
+#header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.6;
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.logo span {
+  color: var(--purple);
+  text-shadow: var(--purple-glow);
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.tab-btn {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.3s;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  position: relative;
+}
+
+.tab-btn:hover {
+  color: var(--cyan);
+  border-color: rgba(0,245,255,0.4);
+}
+
+.tab-btn.active {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: var(--cyan-dim);
+  box-shadow: var(--cyan-glow), inset 0 0 20px rgba(0,245,255,0.05);
+}
+
+.header-right {
+  margin-left: auto;
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+/* PARADOX BANNER */
+#paradox-banner {
+  position: fixed;
+  top: 64px; left: 0; right: 0;
+  z-index: 99;
+  background: linear-gradient(90deg, rgba(123,47,255,0.08), rgba(0,245,255,0.05), rgba(123,47,255,0.08));
+  border-bottom: 1px solid rgba(123,47,255,0.2);
+  padding: 6px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+}
+
+#paradox-banner .label {
+  color: var(--purple);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: var(--purple-glow);
+  flex-shrink: 0;
+}
+
+/* MAIN SCROLL AREA */
+#main {
+  padding-top: 100px;
+  padding-bottom: 40px;
+  overflow-x: auto;
+  overflow-y: visible;
+  min-height: 100vh;
+}
+
+#columns-wrapper {
+  display: flex;
+  gap: 0;
+  min-width: max-content;
+  padding: 24px 24px 0;
+  align-items: flex-start;
+}
+
+/* EPOCH COLUMN */
+.epoch-col {
+  width: var(--col-width);
+  min-width: var(--col-width);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(40px);
+  animation: colRise 0.6s ease forwards;
+  position: relative;
+}
+
+.epoch-col:first-child { border-left: 1px solid var(--border); }
+
+@keyframes colRise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.epoch-col:hover {
+  background: rgba(0,245,255,0.02);
+}
+
+.epoch-col:hover .col-header {
+  border-bottom-color: rgba(0,245,255,0.3);
+}
+
+/* COLUMN HEADER */
+.col-header {
+  padding: 16px 12px 12px;
+  border-bottom: 1px solid var(--border);
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: linear-gradient(180deg, rgba(0,245,255,0.03) 0%, transparent 100%);
+}
+
+.epoch-num {
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+
+.epoch-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: 0 0 12px rgba(0,245,255,0.5);
+  line-height: 1.2;
+}
+
+.epoch-dates {
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+.epoch-pop {
+  font-size: 9px;
+  color: var(--text);
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.epoch-pop::before {
+  content: '◈';
+  color: var(--purple);
+  font-size: 8px;
+}
+
+/* CARD BODY */
+.col-body {
+  flex: 1;
+  padding: 12px 10px;
+  min-height: 420px;
+  position: relative;
+}
+
+.card-group {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeSlideIn 0.4s ease;
+}
+
+.card-group.active {
+  display: flex;
+}
+
+.card-group.exiting {
+  animation: fadeSlideOut 0.3s ease forwards;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeSlideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-20px); }
+}
+
+/* DATA CARDS */
+.data-card {
+  background: rgba(0,245,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 8px;
+  position: relative;
+}
+
+.data-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px; height: 100%;
+  background: var(--cyan);
+  opacity: 0.4;
+}
+
+.data-card.purple::before { background: var(--purple); }
+
+.card-label {
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.card-value {
+  font-size: 9px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* GAUGE */
+.gauge-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.gauge-svg { overflow: visible; }
+
+.gauge-track {
+  fill: none;
+  stroke: rgba(0,245,255,0.1);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px #00f5ff);
+  transition: stroke-dashoffset 1s ease;
+}
+
+.gauge-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--cyan);
+  filter: drop-shadow(0 0 6px #00f5ff);
+}
+
+.gauge-sub {
+  font-size: 5px;
+  fill: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+/* TECH BADGE */
+.tech-badge {
+  display: inline-block;
+  font-size: 8px;
+  padding: 3px 8px;
+  border: 1px solid rgba(0,245,255,0.4);
+  color: var(--cyan);
+  background: rgba(0,245,255,0.05);
+  border-radius: 1px;
+  box-shadow: 0 0 8px rgba(0,245,255,0.2);
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* GAP BAR */
+.gap-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.gap-bar-track {
+  height: 4px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.gap-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+
+.gap-bar-fill.cyan {
+  background: linear-gradient(90deg, var(--cyan), rgba(0,245,255,0.6));
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.gap-bar-fill.purple {
+  background: linear-gradient(90deg, var(--purple), rgba(123,47,255,0.6));
+  box-shadow: 0 0 8px var(--purple);
+}
+
+.gap-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 7px;
+  color: var(--text-dim);
+}
+
+/* VERTICAL BAR (intellectual labor) */
+.vbar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.vbar-track {
+  width: 24px;
+  height: 80px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid rgba(0,245,255,0.1);
+}
+
+.vbar-fill {
+  width: 100%;
+  border-radius: 1px;
+  background: linear-gradient(0deg, var(--purple), var(--cyan));
+  box-shadow: 0 0 10px rgba(0,245,255,0.5);
+  transition: height 1s ease;
+  min-height: 2px;
+}
+
+.vbar-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+}
+
+/* LIFT SCALE */
+.lift-scale {
+  position: relative;
+  height: 20px;
+  margin: 4px 0;
+}
+
+.lift-track {
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-50%);
+}
+
+.lift-dot {
+  position: absolute;
+  top: 50%;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: var(--cyan-glow);
+  transform: translate(-50%, -50%);
+  transition: left 0.8s ease;
+}
+
+.lift-ticks {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.lift-tick {
+  width: 1px;
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+}
+
+/* DISCOVERIES LIST */
+.discovery-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 8px;
+  color: var(--text);
+  line-height: 1.5;
+  padding: 2px 0;
+}
+
+.discovery-bullet {
+  color: var(--cyan);
+  font-size: 8px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  text-shadow: var(--cyan-glow);
+}
+
+/* PARADIGM SPEED BAR */
+.speed-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.speed-track {
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.speed-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--purple), var(--cyan));
+  box-shadow: 0 0 10px rgba(0,245,255,0.4);
+  transition: width 0.8s ease;
+}
+
+.speed-label {
+  font-size: 8px;
+  color: var(--cyan);
+  letter-spacing: 0.5px;
+}
+
+/* ELITE-MASS GAP METER */
+.gap-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0;
+}
+
+.gap-node {
+  font-size: 7px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 1px;
+}
+
+.gap-node.elite {
+  color: var(--cyan);
+  border: 1px solid rgba(0,245,255,0.5);
+  background: rgba(0,245,255,0.08);
+  text-shadow: 0 0 6px var(--cyan);
+}
+
+.gap-node.mass {
+  color: var(--purple);
+  border: 1px solid rgba(123,47,255,0.5);
+  background: rgba(123,47,255,0.08);
+  text-shadow: 0 0 6px var(--purple);
+}
+
+.gap-line {
+  width: 1px;
+  background: linear-gradient(180deg, var(--cyan), var(--purple));
+  opacity: 0.5;
+  transition: height 0.8s ease;
+  min-height: 4px;
+}
+
+/* PHILOSOPHER QUOTE */
+.philosopher-card {
+  background: linear-gradient(135deg, rgba(123,47,255,0.08), rgba(0,245,255,0.03));
+  border: 1px solid rgba(123,47,255,0.3);
+  border-radius: 2px;
+  padding: 10px 8px;
+  position: relative;
+  margin-top: 4px;
+}
+
+.philosopher-card::before {
+  content: '"';
+  position: absolute;
+  top: -8px; left: 6px;
+  font-size: 40px;
+  color: var(--purple);
+  opacity: 0.3;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.philosopher-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  color: var(--purple);
+  letter-spacing: 1px;
+  text-shadow: var(--purple-glow);
+  margin-bottom: 5px;
+}
+
+.philosopher-quote {
+  font-size: 8px;
+  color: var(--text);
+  line-height: 1.6;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.philosopher-null {
+  font-size: 8px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 16px 0;
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 2px;
+}
+
+/* PARADOX SPARKLINE at column bottom */
+.col-footer {
+  border-top: 1px solid var(--border);
+  padding: 8px 10px 12px;
+  background: linear-gradient(0deg, rgba(123,47,255,0.04) 0%, transparent 100%);
+}
+
+.sparkline-label {
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  display: flex;
+  gap: 8px;
+}
+
+.spark-legend {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.spark-dot {
+  width: 6px; height: 2px;
+  border-radius: 1px;
+}
+
+.spark-dot.cyan { background: var(--cyan); }
+.spark-dot.purple { background: var(--purple); }
+
+.sparkline-svg {
+  width: 100%;
+  height: 40px;
+  overflow: visible;
+}
+
+/* SCROLLBAR */
+#main::-webkit-scrollbar { height: 4px; }
+#main::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+#main::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; box-shadow: var(--cyan-glow); }
+
+/* Edu layout */
+.edu-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+/* Effect card */
+.effect-card {
+  border-left-color: #ff6b35 !important;
+}
+.effect-card::before { background: #ff6b35 !important; }
+
+/* Transition animation keyframes for stagger */
+.stagger-in {
+  animation: fadeSlideIn 0.4s ease both;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.cyan-glow-text {
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+  animation: glowPulse 3s ease infinite;
+}
+
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="logo">ИСТОРИЯ <span>ЧЕЛОВЕЧЕСТВА</span></div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-tab="info">ИНФОСРЕДА</button>
+    <button class="tab-btn" data-tab="edu">ОБРАЗОВАНИЕ</button>
+    <button class="tab-btn" data-tab="eco">ЭКОНОМИКА</button>
+    <button class="tab-btn" data-tab="prog">ПРОГРЕСС</button>
+  </div>
+  <div class="header-right">ПАРАДОКС ПЛАТОНА · 13 ЭПОХ</div>
+</div>
+
+<div id="paradox-banner">
+  <span class="label">◈ ПАРАДОКС</span>
+  <span>Доступ к информации растёт → Реальный интеллект масс остаётся прежним. Платон был прав с 370 до н.э.</span>
+</div>
+
+<div id="main">
+  <div id="columns-wrapper"></div>
+</div>
+
+<script>
+const EPOCHS = [
+  { id:1, name:"Праобщество", dates:"~2 млн — 40 тыс. до н.э.", population:"100–300 тыс.",
+    literacy:0, infoTech:"—", infoAvg:"Только устные предания", infoElite:"То же, немного больше", eliteGap:1,
+    eduAvg:"Имитация взрослых, выживание", eduElite:"Нет выделенной элиты", massEffect:"—", eliteProgress:"—", philosopher:null,
+    laborType:"Охота, собирательство", intellectualLabor:0, socialLift:1, socialLiftLabel:"Закрыт",
+    discoveries:["Огонь","Каменные орудия"], paradigmSpeed:"Тысячелетия", paradigmSpeedNum:1, eliteMassGap:1 },
+  { id:2, name:"Первобытное стадо", dates:"~40–15 тыс. до н.э.", population:"1–2 млн",
+    literacy:0, infoTech:"Язык", infoAvg:"10–50 устных историй", infoElite:"100–200 устных текстов", eliteGap:2,
+    eduAvg:"Передача навыков устно, от старших", eduElite:"Шаман: ученичество, запоминание ритуалов", massEffect:"Знания не накапливаются между поколениями", eliteProgress:"Шаман накапливает уникальный ритуальный опыт", philosopher:null,
+    laborType:"Охота, собирательство", intellectualLabor:0.1, socialLift:1, socialLiftLabel:"Только через магический авторитет",
+    discoveries:["Лук","Игла","Одежда"], paradigmSpeed:"Тысячи лет", paradigmSpeedNum:1, eliteMassGap:2 },
+  { id:3, name:"Родовая община", dates:"~15–3 тыс. до н.э.", population:"10–50 млн",
+    literacy:0, infoTech:"Наскальные рисунки", infoAvg:"50–100 устных текстов", infoElite:"200–500 текстов", eliteGap:3,
+    eduAvg:"Обучение внутри рода, обряды инициации", eduElite:"Жрец: ученичество, тайные знания", massEffect:"Знания ограничены радиусом рода", eliteProgress:"Жрецы: монополия на тайное знание", philosopher:null,
+    laborType:"Земледелие, скотоводство", intellectualLabor:0.5, socialLift:1, socialLiftLabel:"Только через жреческое сословие",
+    discoveries:["Колесо","Гончарство","Металл"], paradigmSpeed:"Сотни лет", paradigmSpeedNum:2, eliteMassGap:3 },
+  { id:4, name:"Раннерабовлад.", dates:"~3500–1000 до н.э.", population:"50–100 млн",
+    literacy:2, infoTech:"Алфавит, письменность", infoAvg:"0 книг (97% безграмотны)", infoElite:"20–100 свитков", eliteGap:5,
+    eduAvg:"Обучение труду в семье, никаких школ", eduElite:"Храмовые и дворцовые школы", massEffect:"97% живут вне письменной культуры", eliteProgress:"Писцы, жрецы: систематизация знаний", philosopher:null,
+    laborType:"Рабский труд, земледелие", intellectualLabor:1, socialLift:2, socialLiftLabel:"Узкий: стать писцом — редкий шанс",
+    discoveries:["Письменность","Астрономия","Математика"], paradigmSpeed:"Сотни лет", paradigmSpeedNum:2, eliteMassGap:5 },
+  { id:5, name:"Развитой рабовлад.", dates:"~1000 до н.э. — II в. н.э.", population:"170–300 млн",
+    literacy:12, infoTech:"Библиотека Александрии", infoAvg:"0–1 текст (90% безграмотны)", infoElite:"100–1000 свитков", eliteGap:7,
+    eduAvg:"Устное обучение ремеслу, изредка чтение", eduElite:"Академия Платона, Ликей Аристотеля", massEffect:"Рост грамотности не повысил статус большинства", eliteProgress:"Платон, Аристотель, Архимед: кумулятивный прогресс",
+    philosopher:{name:"Платон / Сократ", quote:"Письменность ослабляет память, текст не может отвечать на вопросы — живой диалог выше любого письма. Знание рождается только в беседе, не в чтении."},
+    laborType:"Рабский труд, ремесло", intellectualLabor:2.5, socialLift:3, socialLiftLabel:"Отпущенники, риторы — возможен, но редок",
+    discoveries:["Геометрия Евклида","Гелиоцентризм","Акведуки"], paradigmSpeed:"100–200 лет", paradigmSpeedNum:3, eliteMassGap:7 },
+  { id:6, name:"Раннефеодальный", dates:"V–IX вв.", population:"200–300 млн",
+    literacy:3, infoTech:"Рукописные книги", infoAvg:"0 книг (95% безграмотны)", infoElite:"10–50 книг", eliteGap:8,
+    eduAvg:"Молитвы, труд", eduElite:"Монастырское: trivium", massEffect:"Крестьянство веками в неизменном укладе", eliteProgress:"Монахи: сохранение античного знания",
+    philosopher:{name:"Августин Блаженный", quote:"Буква убивает, дух животворит — понимание важнее заучивания текста."},
+    laborType:"Сельский труд, война", intellectualLabor:1, socialLift:1, socialLiftLabel:"Только через церковь",
+    discoveries:["Сохранение античного знания","Арабская алгебра"], paradigmSpeed:"Векá", paradigmSpeedNum:2, eliteMassGap:8 },
+  { id:7, name:"Развитой феодализм", dates:"X–XIV вв.", population:"300–400 млн",
+    literacy:12, infoTech:"Университеты (1088)", infoAvg:"0 книг (90% безграмотны)", infoElite:"50–200 книг", eliteGap:8,
+    eduAvg:"Цеховое ученичество, приход", eduElite:"Университет: теология, право, диспуты", massEffect:"Рост числа школ не изменил положение крестьян", eliteProgress:"Схоласты: систематическая наука, логика",
+    philosopher:{name:"Фома Аквинский / Абеляр", quote:"Схоластический диспут важнее пассивного чтения — истина рождается в столкновении аргументов. «Sic et Non»: противоречия требуют самостоятельного суждения."},
+    laborType:"Земледелие, ремесло", intellectualLabor:2.5, socialLift:2, socialLiftLabel:"Университет — редкий лифт для талантов",
+    discoveries:["Схоластика","Компас","Порох"], paradigmSpeed:"50–100 лет", paradigmSpeedNum:4, eliteMassGap:8 },
+  { id:8, name:"Поздний феодализм", dates:"XV–XVIII вв.", population:"400–800 млн",
+    literacy:35, infoTech:"Печатный станок (1440)", infoAvg:"1–5 книг", infoElite:"200–2000 книг", eliteGap:7,
+    eduAvg:"Приходские школы, Библия, счёт", eduElite:"Гимназии, академии, энциклопедисты", massEffect:"Печатный станок дал доступ, но не критическое мышление", eliteProgress:"Ньютон, Лейбниц: взрывной рост через академии",
+    philosopher:{name:"Монтень / Коменский", quote:"«Лучше голова, хорошо устроенная, чем голова, хорошо набитая» — критика зубрёжки. Обучение через действие и наблюдение, а не повторение."},
+    laborType:"Мануфактура, земледелие", intellectualLabor:4, socialLift:4, socialLiftLabel:"Расширяется: грамотность открывает торговлю",
+    discoveries:["Книгопечатание","Гелиоцентризм Коперника","Ньютоновская механика"], paradigmSpeed:"30–50 лет", paradigmSpeedNum:5, eliteMassGap:7 },
+  { id:9, name:"Ранний капитализм", dates:"XVII–XIX вв.", population:"0,8–1,2 млрд",
+    literacy:55, infoTech:"Телеграф, газеты", infoAvg:"5–20 книг + газеты", infoElite:"500–5000 книг", eliteGap:7,
+    eduAvg:"Массовые народные школы, обязательное начальное образование", eduElite:"Университеты, научные общества", massEffect:"Массовая школа дала грамотность, но не интеллект", eliteProgress:"Научные общества: кумулятивный прогресс ускоряется",
+    philosopher:{name:"Кант / Фихте", quote:"«Sapere aude» — имей мужество пользоваться собственным умом. Подлинное образование (Bildung) — самостоятельное воспроизведение знания; зубрёжка создаёт рабов духа."},
+    laborType:"Заводской труд (~70 ч/нед)", intellectualLabor:7, socialLift:5, socialLiftLabel:"Образование = реальный лифт, но доступно немногим",
+    discoveries:["Паровой двигатель","Теория эволюции","Электричество"], paradigmSpeed:"20–30 лет", paradigmSpeedNum:6, eliteMassGap:7 },
+  { id:10, name:"Империализм", dates:"Кон. XIX в. — 1914", population:"1,6 млрд",
+    literacy:80, infoTech:"Радио, телефон, пресса", infoAvg:"20–50 книг + газеты", infoElite:"1000–10000 книг", eliteGap:6,
+    eduAvg:"Обязательная школа 4–8 лет, учебники", eduElite:"Университет + лаборатории", massEffect:"Обязательная школа создала грамотных рабочих, а не мыслителей", eliteProgress:"Дарвин, Менделеев, Эйнштейн",
+    philosopher:{name:"Ницше / Дьюи", quote:"Массовое образование штампует послушных работников, а не мыслителей. «Обучение через делание» — пассивное чтение не формирует компетенции."},
+    laborType:"Промышленный труд", intellectualLabor:12, socialLift:6, socialLiftLabel:"Массовая школа открывает путь в «белые воротнички»",
+    discoveries:["Радио","Рентген","Теория относительности"], paradigmSpeed:"10–20 лет", paradigmSpeedNum:7, eliteMassGap:6 },
+  { id:11, name:"Гос.-монопол. капитализм", dates:"1914 — наст. время", population:"1,6 → 8+ млрд",
+    literacy:94, infoTech:"Радио, ТВ, Интернет", infoAvg:"100–500 книг + ТВ/радио", infoElite:"5000–50000 материалов", eliteGap:8,
+    eduAvg:"Всеобщее среднее образование, стандартные программы", eduElite:"Аспирантура, научные сети", massEffect:"Больше дипломов — не больше мышления. Корреляция IQ/учёба: 0.63 → 0.50", eliteProgress:"НИИ, аспирантура: специализация углубляется",
+    philosopher:{name:"Дьюи / Фрейре", quote:"«Банковская модель» образования — когда учитель «вкладывает» знания в пассивного ученика — подавляет мышление. Школа-фабрика убивает критическое мышление."},
+    laborType:"Смешанный: завод + офис", intellectualLabor:35, socialLift:8, socialLiftLabel:"Высокий — диплом = стандартный лифт",
+    discoveries:["Квантовая физика","ДНК","Компьютер"], paradigmSpeed:"5–10 лет", paradigmSpeedNum:8, eliteMassGap:8 },
+  { id:12, name:"Социализм (СССР)", dates:"1917–1991", population:"2,5–5,3 млрд",
+    literacy:99, infoTech:"Радио, ТВ", infoAvg:"200–600 книг", infoElite:"3000–30000 книг", eliteGap:6,
+    eduAvg:"Всеобщее бесплатное образование, идеологический компонент", eduElite:"Академия наук, НИИ, спецшколы", massEffect:"Высокая грамотность + зубрёжка = широкие знания, но слабое критическое мышление", eliteProgress:"Академия наук: точные науки на мировом уровне",
+    philosopher:{name:"Выготский", quote:"Зона ближайшего развития — знание усваивается только через активное действие, не через текст. Реально доминировала зубрёжка."},
+    laborType:"Индустриальный + плановый", intellectualLabor:30, socialLift:7, socialLiftLabel:"Высокий, особенно через технические специальности",
+    discoveries:["Космос","Ядерная физика","Кибернетика"], paradigmSpeed:"5–10 лет", paradigmSpeedNum:8, eliteMassGap:6 },
+  { id:13, name:"Постиндустриальное", dates:"Кон. XX в. — наст. время", population:"6 → 8,1 млрд",
+    literacy:86, infoTech:"Интернет, соцсети, ИИ", infoAvg:"~12 книг/год + 34 ГБ/день", infoElite:"50–200 книг/год + терабайты", eliteGap:10,
+    eduAvg:"YouTube, онлайн-курсы, ИИ-ассистенты", eduElite:"MOOCs, открытая наука, ИИ-инструменты", massEffect:"ПАРАДОКС: доступ к всей информации мира не поднял средний IQ — «парадокс Флинна» останавливается", eliteProgress:"ИИ-инструменты: элита прогрессирует быстрее чем когда-либо",
+    philosopher:{name:"Талеб / Метапознание", quote:"Академическое чтение без практики — «интеллектуальный туризм». Доступность любого текста обесценивает факты. Ценность: умение задавать вопросы и синтезировать. Платон был прав."},
+    laborType:"Умственный / сервисный / цифровой", intellectualLabor:55, socialLift:7, socialLiftLabel:"Формально высокий, реально — диплом обесценивается",
+    discoveries:["ИИ","CRISPR","Квантовые компьютеры"], paradigmSpeed:"Менее 2–3 лет", paradigmSpeedNum:10, eliteMassGap:10 }
+];
+
+// Sparkline data: intellectual progress of masses (manual estimate, flat-ish)
+const MASS_PROGRESS = [1,1,1.2,1.3,1.5,1.4,1.6,2,2.5,3,3.2,3.5,3.3];
+
+let activeTab = 'info';
+
+function buildGaugeSVG(pct, r=28) {
+  const circ = 2 * Math.PI * r;
+  const half = circ / 2;
+  const fill = (pct / 100) * half;
+  const dash = `${fill} ${circ}`;
+  return `<svg class="gauge-svg" width="70" height="44" viewBox="0 0 70 44">
+    <path class="gauge-track" d="M 6 38 A ${r} ${r} 0 0 1 64 38" stroke-dasharray="${half} ${circ}"/>
+    <path class="gauge-fill" d="M 6 38 A ${r} ${r} 0 0 1 64 38"
+      stroke-dasharray="0 ${circ}"
+      stroke-dashoffset="0"
+      data-target-dash="${fill} ${circ}"
+      data-target-offset="0"/>
+    <text class="gauge-text" x="35" y="34" text-anchor="middle">${pct}%</text>
+    <text class="gauge-sub" x="35" y="42" text-anchor="middle">ГРАМОТНОСТЬ</text>
+  </svg>`;
+}
+
+function buildSparkline(epochIdx) {
+  const all = EPOCHS;
+  const w = 180, h = 38, pad = 4;
+  const maxLit = 100;
+  const maxProg = 10;
+
+  const points = (arr, max) => all.map((e,i) => {
+    const x = pad + (i / (all.length-1)) * (w - 2*pad);
+    const val = arr[i];
+    const y = h - pad - (val / max) * (h - 2*pad);
+    return [x,y];
+  });
+
+  const litPts = points(all.map(e => e.literacy), maxLit);
+  const progPts = points(MASS_PROGRESS, maxLit); // same scale for comparison
+
+  const polyline = pts => pts.map(p => p.join(',')).join(' ');
+
+  // current epoch marker x
+  const cx = pad + (epochIdx / (all.length-1)) * (w - 2*pad);
+
+  return `<svg class="sparkline-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <polyline points="${polyline(litPts)}" fill="none" stroke="rgba(0,245,255,0.5)" stroke-width="1.5" stroke-linejoin="round"/>
+    <polyline points="${polyline(progPts)}" fill="none" stroke="rgba(123,47,255,0.5)" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="3,2"/>
+    <circle cx="${litPts[epochIdx][0]}" cy="${litPts[epochIdx][1]}" r="3" fill="#00f5ff" filter="url(#glow)"/>
+    <circle cx="${progPts[epochIdx][0]}" cy="${progPts[epochIdx][1]}" r="3" fill="#7b2fff" filter="url(#glow)"/>
+    <line x1="${cx}" y1="2" x2="${cx}" y2="${h-2}" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="2,2"/>
+  </svg>`;
+}
+
+function buildInfoCard(e) {
+  return `
+    <div class="data-card">
+      <div class="card-label">ГРАМОТНОСТЬ</div>
+      <div class="gauge-wrap">${buildGaugeSVG(e.literacy)}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">ТЕХНОЛОГИЯ</div>
+      <div class="tech-badge">${e.infoTech}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">МАССЫ</div>
+      <div class="card-value">${e.infoAvg}</div>
+    </div>
+    <div class="data-card purple">
+      <div class="card-label">ЭЛИТА</div>
+      <div class="card-value">${e.infoElite}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">РАЗРЫВ ЭЛИТА–МАССЫ</div>
+      <div class="gap-bar-wrap">
+        <div class="gap-bar-track">
+          <div class="gap-bar-fill cyan" style="width:${e.eliteGap*10}%"></div>
+        </div>
+        <div class="gap-labels"><span>МИН</span><span>${e.eliteGap}/10</span><span>МАКС</span></div>
+      </div>
+    </div>`;
+}
+
+function buildEduCard(e) {
+  return `
+    <div class="edu-split">
+      <div class="data-card">
+        <div class="card-label">МАССЫ</div>
+        <div class="card-value">${e.eduAvg}</div>
+      </div>
+      <div class="data-card purple">
+        <div class="card-label">ЭЛИТА</div>
+        <div class="card-value">${e.eduElite}</div>
+      </div>
+    </div>
+    <div class="data-card effect-card">
+      <div class="card-label">РЕАЛЬНЫЙ ЭФФЕКТ</div>
+      <div class="card-value">${e.massEffect}</div>
+    </div>
+    <div class="data-card purple">
+      <div class="card-label">ПРОГРЕСС ЭЛИТЫ</div>
+      <div class="card-value">${e.eliteProgress}</div>
+    </div>
+    ${e.philosopher ? `
+    <div class="philosopher-card">
+      <div class="philosopher-name">◈ ${e.philosopher.name}</div>
+      <div class="philosopher-quote">${e.philosopher.quote}</div>
+    </div>` : `<div class="philosopher-null">— нет данных —</div>`}`;
+}
+
+function buildEcoCard(e) {
+  const liftPct = ((e.socialLift - 1) / 9) * 100;
+  return `
+    <div class="data-card">
+      <div class="card-label">ТИП ТРУДА</div>
+      <div class="card-value">${e.laborType}</div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">ИНТЕЛЛЕКТУАЛЬНЫЙ ТРУД</div>
+      <div class="vbar-wrap">
+        <div class="vbar-track">
+          <div class="vbar-fill" style="height:${Math.max(e.intellectualLabor,0.5)}%"></div>
+        </div>
+        <div class="vbar-label">${e.intellectualLabor}%</div>
+      </div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">СОЦИАЛЬНЫЙ ЛИФТ</div>
+      <div class="lift-scale">
+        <div class="lift-track"></div>
+        <div class="lift-ticks">${Array(11).fill('<div class="lift-tick"></div>').join('')}</div>
+        <div class="lift-dot" style="left:${liftPct}%"></div>
+      </div>
+      <div class="card-value" style="font-size:8px;margin-top:4px">${e.socialLiftLabel}</div>
+    </div>`;
+}
+
+function buildProgCard(e) {
+  const gapH = e.eliteMassGap * 5 + 10;
+  return `
+    <div class="data-card">
+      <div class="card-label">КЛЮЧЕВЫЕ ОТКРЫТИЯ</div>
+      ${e.discoveries.map(d => `<div class="discovery-item"><span class="discovery-bullet">▸</span>${d}</div>`).join('')}
+    </div>
+    <div class="data-card">
+      <div class="card-label">СКОРОСТЬ ПАРАДИГМ</div>
+      <div class="speed-bar-wrap">
+        <div class="speed-track">
+          <div class="speed-fill" style="width:${e.paradigmSpeedNum*10}%"></div>
+        </div>
+        <div class="speed-label">${e.paradigmSpeed}</div>
+      </div>
+    </div>
+    <div class="data-card">
+      <div class="card-label">РАЗРЫВ ЭЛИТА–МАССЫ</div>
+      <div class="gap-meter">
+        <div class="gap-node elite">ЭЛИТА</div>
+        <div class="gap-line" style="height:${gapH}px"></div>
+        <div class="gap-node mass">МАССЫ</div>
+      </div>
+    </div>`;
+}
+
+function getCardContent(e, tab) {
+  switch(tab) {
+    case 'info': return buildInfoCard(e);
+    case 'edu':  return buildEduCard(e);
+    case 'eco':  return buildEcoCard(e);
+    case 'prog': return buildProgCard(e);
+  }
+}
+
+function buildColumn(e, idx) {
+  const col = document.createElement('div');
+  col.className = 'epoch-col';
+  col.style.animationDelay = `${idx * 50}ms`;
+  col.dataset.id = e.id;
+
+  col.innerHTML = `
+    <div class="col-header">
+      <div class="epoch-num">${String(e.id).padStart(2,'0')}</div>
+      <div class="epoch-name">${e.name}</div>
+      <div class="epoch-dates">${e.dates}</div>
+      <div class="epoch-pop">${e.population}</div>
+    </div>
+    <div class="col-body">
+      <div class="card-group active" data-tab="info">${buildInfoCard(e)}</div>
+      <div class="card-group" data-tab="edu">${buildEduCard(e)}</div>
+      <div class="card-group" data-tab="eco">${buildEcoCard(e)}</div>
+      <div class="card-group" data-tab="prog">${buildProgCard(e)}</div>
+    </div>
+    <div class="col-footer">
+      <div class="sparkline-label">
+        <span class="spark-legend"><span class="spark-dot cyan"></span>грамотность</span>
+        <span class="spark-legend"><span class="spark-dot purple"></span>интеллект масс</span>
+      </div>
+      ${buildSparkline(idx)}
+    </div>`;
+
+  return col;
+}
+
+// Render
+const wrapper = document.getElementById('columns-wrapper');
+EPOCHS.forEach((e,i) => {
+  wrapper.appendChild(buildColumn(e, i));
+});
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    if (tab === activeTab) return;
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cols = document.querySelectorAll('.epoch-col');
+    cols.forEach((col, idx) => {
+      const current = col.querySelector('.card-group.active');
+      const next = col.querySelector(`.card-group[data-tab="${tab}"]`);
+
+      setTimeout(() => {
+        if (current) {
+          current.classList.add('exiting');
+          setTimeout(() => {
+            current.classList.remove('active','exiting');
+          }, 300);
+        }
+        setTimeout(() => {
+          if (next) next.classList.add('active');
+        }, 200);
+      }, idx * 30);
+    });
+
+    activeTab = tab;
+
+    // Animate bars after tab switch
+    setTimeout(() => animateBars(), 300);
+  });
+});
+
+function animateBars() {
+  // Animate gauge fills
+  document.querySelectorAll('.gauge-fill').forEach(el => {
+    const td = el.getAttribute('data-target-dash');
+    if (td) {
+      el.style.strokeDasharray = '0 1000';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.transition = 'stroke-dasharray 1s ease';
+          el.style.strokeDasharray = td;
+        });
+      });
+    }
+  });
+}
+
+// Initial animate
+setTimeout(animateBars, 600);
+
+// Animate gauge fills on page load too
+window.addEventListener('load', () => {
+  setTimeout(animateBars, 800);
+});
+</script>
+</body>
+</html>

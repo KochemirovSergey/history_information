@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>История Человечества</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#06070F;font-family:'Outfit',sans-serif;color:#fff}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.028;pointer-events:none;z-index:9999}
+#wrap{width:100vw;height:100vh;overflow:hidden}
+#container{display:flex;flex-direction:column;transition:transform .75s cubic-bezier(.77,0,.175,1);will-change:transform}
+.slide{width:100vw;height:100vh;flex-shrink:0;position:relative;overflow:hidden}
+
+/* nav */
+#nav{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;z-index:500}
+.nbtn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);color:rgba(255,255,255,0.45);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;user-select:none}
+.nbtn:hover{border-color:rgba(255,255,255,0.5);color:#fff;background:rgba(255,255,255,0.1)}
+#dots{display:flex;flex-direction:column;gap:6px;padding:2px 0}
+.dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.18);transition:all .3s;cursor:pointer}
+.dot.on{background:#fff;box-shadow:0 0 7px rgba(255,255,255,0.7)}
+
+/* slide 0 */
+#s0{display:flex;flex-direction:column}
+#tzone{flex:1;min-height:0}
+
+/* placeholder slides */
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.ph-title{font-family:'Bebas Neue',sans-serif;font-size:50px;letter-spacing:.2em;color:rgba(255,255,255,0.1)}
+.ph-sub{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:rgba(255,255,255,0.07)}
+.ph-accent{position:absolute;top:0;left:0;right:0;height:1px}
+
+/* tooltip */
+#tip{position:fixed;background:rgba(6,7,18,.95);border:1px solid rgba(255,255,255,0.09);backdrop-filter:blur(14px);padding:8px 13px;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.75);pointer-events:none;opacity:0;transition:opacity .12s;z-index:800;line-height:1.75;white-space:nowrap}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="container">
+
+    <div class="slide" id="s0">
+      <div id="tzone"></div>
+    </div>
+
+    <div class="slide ph"><div class="ph-accent" style="background:#2E86AB"></div><div class="ph-title">Информационная Среда</div><div class="ph-sub">Экран 1 · Грамотность · Технологии · Объём информации</div></div>
+    <div class="slide ph"><div class="ph-accent" style="background:#7B5EA7"></div><div class="ph-title">Образование и Эффект</div><div class="ph-sub">Экран 2 · Элита · Массы · Философия</div></div>
+    <div class="slide" id="s3"></div>
+    <div class="slide ph"><div class="ph-accent" style="background:#E9C46A"></div><div class="ph-title">Скорость Прогресса</div><div class="ph-sub">Экран 4 · Открытия · Парадигмы · Разрыв элита–массы</div></div>
+
+  </div>
+</div>
+
+<div id="nav">
+  <button class="nbtn" id="bup">↑</button>
+  <div id="dots"></div>
+  <button class="nbtn" id="bdn">↓</button>
+</div>
+<div id="tip"></div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────
+const periods = [
+  {id:1, name:"Рабовладельческий",      start:-1500, end:400,  pop:{min:110,max:200},  color:"#C0622F",
+   tech:[{icon:"α",  name:"Алфавит",         year:-1050}],
+   edu:{
+     institution:"Философские и жреческие школы",
+     knowledge_status:"Знание у элиты; степеней и корпораций нет"
+   }},
+  {id:2, name:"Феодальный",             start:400,   end:1400, pop:{min:250,max:350},  color:"#7B5EA7",
+   tech:[{icon:"☰",  name:"Книги",           year:400},
+         {icon:"⌂",  name:"Университет",     year:1088}],
+   edu:{
+     institution:"Монастырские школы и ранние университеты",
+     knowledge_status:"Церковь хранит знание; ун-т — сословная корпорация"
+   }},
+  {id:3, name:"Абсолютизм",             start:1400,  end:1800, pop:{min:400,max:800},  color:"#2E86AB",
+   tech:[{icon:"⎙",  name:"Печатный станок", year:1440}],
+   edu:{
+     institution:"Королевские университеты",
+     knowledge_status:"Чиновники и духовенство; контроль растёт, науки тоже"
+   }},
+  {id:4, name:"Индустриализм",          start:1600,  end:1900, pop:{min:800,max:1200}, color:"#1B998B",
+   tech:[{icon:"–·–",name:"Телеграф",        year:1837}],
+   edu:{
+     institution:"Исследовательский университет",
+     knowledge_status:"Наука + обучение; инженеры, врачи, учёные"
+   }},
+  {id:5, name:"Империализм",            start:1870,  end:1914, pop:{min:1400,max:1600},color:"#E9C46A",
+   tech:[{icon:"☎",  name:"Телефон",         year:1876},
+         {icon:"◌◌◌",name:"Радио",           year:1895}],
+   edu:{
+     institution:"Национальные университеты",
+     knowledge_status:"Служат империям; идеология усиливается"
+   }},
+  {id:6, name:"Капитализм",             start:1914,  end:2026, pop:{min:1600,max:8000},color:"#E76F51",
+   tech:[{icon:"▣",  name:"Телевидение",     year:1926},
+         {icon:"⊡",  name:"Компьютер",       year:1946},
+         {icon:"◎",  name:"Интернет",        year:1969}],
+   edu:{
+     institution:"Предпринимательский университет",
+     knowledge_status:"Рынок: конкуренция, платность, прикладные цели"
+   }},
+  {id:7, name:"Информационное общество",start:1970,  end:2026, pop:{min:6000,max:8100},color:"#06D6A0",
+   tech:[{icon:"⬡",  name:"Соцсети",         year:2004},
+         {icon:"▯",  name:"Смартфон",        year:2007},
+         {icon:"◈",  name:"ИИ",              year:2022}],
+   edu:{
+     institution:"?",
+     knowledge_status:"?"
+   }},
+];
+
+const TSTART=-1500, TEND=2026, TYEARS=3526;
+
+// ── MORPH ────────────────────────────────────────────
+let morphT=0, morphAnimId=null;
+let mPeriods=[], mFadeOut=[], mColCells=[], mRowLabels=[], mRowBorders=[], mColTechs=[];
+
+function lerp(a,b,t){ return a+(b-a)*t; }
+function easeIO(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+function animateMorph(target){
+  if(morphAnimId) cancelAnimationFrame(morphAnimId);
+  const from=morphT, to=target, dur=800, t0=performance.now();
+  function frame(now){
+    const raw=Math.min((now-t0)/dur,1);
+    morphT=lerp(from,to,easeIO(raw));
+    applyMorph(morphT);
+    if(raw<1){ morphAnimId=requestAnimationFrame(frame); }
+    else{ morphT=to; applyMorph(to); morphAnimId=null; }
+  }
+  morphAnimId=requestAnimationFrame(frame);
+}
+
+function applyMorph(t){
+  mPeriods.forEach(m=>{
+    m.rect.setAttribute('x',            lerp(m.tx.rx,  m.cx.rx,  t));
+    m.rect.setAttribute('y',            lerp(m.tx.ry,  m.cx.ry,  t));
+    m.rect.setAttribute('width',        lerp(m.tx.rw,  m.cx.rw,  t));
+    m.rect.setAttribute('height',       lerp(m.tx.rh,  m.cx.rh,  t));
+    m.rect.setAttribute('fill-opacity', lerp(m.tx.rfo, m.cx.rfo, t));
+    m.rect.setAttribute('rx',           lerp(1,0,t));
+    m.rect.setAttribute('stroke-opacity', lerp(0.55,0,t));
+    m.topEdge.setAttribute('opacity', lerp(1,0,t));
+    m.nameEl.setAttribute('x',         lerp(m.tx.nx,  m.cx.nx,  t));
+    m.nameEl.setAttribute('y',         lerp(m.tx.ny,  m.cx.ny,  t));
+    m.nameEl.setAttribute('font-size', lerp(m.tx.nfs, m.cx.nfs, t));
+    m.nameEl.setAttribute('text-anchor', t>=0.5 ? 'middle' : m.tx.nanchor);
+    m.divider.setAttribute('opacity', lerp(0,1,t));
+  });
+  mFadeOut.forEach(e=>e.setAttribute('opacity', lerp(1,0,t)));
+  // Table cells fade in
+  mColCells.forEach(c=>{
+    c.rect.setAttribute('fill-opacity', lerp(0, c.tfo, t));
+    c.textEls.forEach(te=>te.setAttribute('fill-opacity', lerp(0, c.tto, t)));
+  });
+  mRowLabels.forEach(l=>l.setAttribute('fill-opacity', lerp(0, 0.3, t)));
+  mRowBorders.forEach(b=>b.setAttribute('opacity', lerp(0, 1, t)));
+  mColTechs.forEach(c=>c.el.setAttribute('fill-opacity', lerp(0, c.tfo, t)));
+}
+
+// ── NAVIGATION ───────────────────────────────────────
+const TOTAL=5;
+let cur=0;
+const cont=document.getElementById('container');
+const dotsEl=document.getElementById('dots');
+
+for(let i=0;i<TOTAL;i++){
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' on':'');
+  d.onclick=()=>go(i);
+  dotsEl.appendChild(d);
+}
+
+function go(n){
+  if(n<0||n>=TOTAL)return;
+  const prev=cur; cur=n;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));
+  if(prev<=1 && n<=1){ animateMorph(n===1?1:0); return; }
+  cont.style.transform=`translateY(-${Math.max(n-1,0)*100}vh)`;
+  if(n===1){ morphT=1; applyMorph(1); }
+  if(n===0){ morphT=0; applyMorph(0); }
+}
+
+document.getElementById('bup').onclick=()=>go(cur-1);
+document.getElementById('bdn').onclick=()=>go(cur+1);
+let wlock=false;
+window.addEventListener('wheel',e=>{
+  if(wlock)return; go(e.deltaY>0?cur+1:cur-1);
+  wlock=true; setTimeout(()=>wlock=false,900);
+},{passive:true});
+window.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown')go(cur+1);
+  if(e.key==='ArrowUp')  go(cur-1);
+});
+
+// ── HELPERS ──────────────────────────────────────────
+function el(ns,tag,attrs){
+  const e=document.createElementNS(ns,tag);
+  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+  return e;
+}
+function fmtYear(y){
+  if(y<0) return `${Math.abs(y)} до н.э.`;
+  if(y===0) return '0';
+  return String(y);
+}
+function wrapText(text, maxW, fs, cr){
+  const maxChars=Math.max(Math.floor(maxW/(fs*cr)),8);
+  const words=text.split(' ');
+  const lines=[];
+  let cur='';
+  for(const w of words){
+    const trial=(cur?cur+' '+w:w);
+    if(trial.length<=maxChars) cur=trial;
+    else{ if(cur) lines.push(cur); cur=w; }
+  }
+  if(cur) lines.push(cur);
+  return lines.length?lines:[''];
+}
+
+// ── TOOLTIP ──────────────────────────────────────────
+const tip=document.getElementById('tip');
+function showTip(e,p){
+  tip.innerHTML=`<span style="color:${p.color};font-weight:600">${p.name}</span>&nbsp;&nbsp;${fmtYear(p.start)} — ${fmtYear(p.end)}<br><span style="color:rgba(255,255,255,0.35)">Население: ${p.pop.min}–${p.pop.max} млн</span>`;
+  tip.style.opacity='1'; moveTip(e);
+}
+function moveTip(e){tip.style.left=(e.clientX+16)+'px';tip.style.top=(e.clientY-12)+'px';}
+function hideTip(){tip.style.opacity='0';}
+
+// ── RENDER ───────────────────────────────────────────
+function render(){
+  const zone=document.getElementById('tzone');
+  zone.innerHTML='';
+  mPeriods=[]; mFadeOut=[]; mColCells=[]; mRowLabels=[]; mRowBorders=[]; mColTechs=[];
+
+  const zr=zone.getBoundingClientRect();
+  const W=zr.width, H=zr.height;
+  const PAD_L=56, PAD_R=60;
+  const TW=W-PAD_L-PAD_R;
+
+  // Timeline layout
+  const POP_H =Math.min(H*0.30,240);
+  const AXIS_H=72;
+  const ROWS_H=H-POP_H-AXIS_H-8;
+  const N     =periods.length;
+  const ROW_H =Math.min(ROWS_H/N,62);
+  const ROWS_OFFSET=(ROWS_H-ROW_H*N)/2;
+  const BAR_H =Math.max(ROW_H*0.52,18);
+  const BAR_GAP=(ROW_H-BAR_H)/2;
+  const FONT_MAX=Math.min(BAR_H*0.82,48);
+  const CHAR_RATIO=0.62;
+
+  // Log scale constants
+  const LOG_MIN=100, LOG_MAX=8100;
+  const LOG_RANGE=Math.log(LOG_MAX)-Math.log(LOG_MIN);
+  const popY0=ROWS_H+AXIS_H+12;
+  const popH =POP_H-16;
+  const base =popY0+popH;
+
+  // Columns + table layout
+  const COL_W=W/N;
+  const COL_PAD=10;
+  const innerW=COL_W-COL_PAD*2;
+  const INST_FS=Math.min(Math.max(COL_W*0.068,13),18), INST_LINE_H=INST_FS*1.4;
+  const KNOW_FS=Math.min(Math.max(COL_W*0.068,13),18), KNOW_LINE_H=KNOW_FS*1.4;
+  const TEXT_FS=9, CR=0.58, LINE_H=13, CELL_PAD_V=7, ROW_LABEL_H=15;
+  const INST_LABEL_H=22, KNOW_LABEL_H=22;
+  const NAME_ZONE_H=62;
+
+  const instMaxLines=Math.max(...periods.map(p=>wrapText(p.edu.institution,innerW,INST_FS,CR).length));
+  const knowMaxLines=Math.max(...periods.map(p=>wrapText(p.edu.knowledge_status,innerW,KNOW_FS,CR).length));
+
+  const INST_ROW_H=INST_LABEL_H+Math.ceil(instMaxLines)*INST_LINE_H+CELL_PAD_V*2;
+  const KNOW_ROW_H=KNOW_LABEL_H+Math.ceil(knowMaxLines)*KNOW_LINE_H+CELL_PAD_V*2;
+  const POP_ROW_H=30;
+  const TABLE_H=NAME_ZONE_H+INST_ROW_H+KNOW_ROW_H+POP_ROW_H;
+
+  // Y positions for period name + pop value in columns view
+  const cxNameY=NAME_ZONE_H*0.60; // near very top
+  const cxPopValY=TABLE_H+(H-TABLE_H)*0.38;
+
+  function xOf(yr){ return PAD_L+(yr-TSTART)/TYEARS*TW; }
+  function pyLog(v){
+    const t=(Math.log(Math.max(v,LOG_MIN))-Math.log(LOG_MIN))/LOG_RANGE;
+    return base-t*popH;
+  }
+
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('width',W); svg.setAttribute('height',H);
+  svg.style.cssText='display:block;overflow:visible';
+
+  // Defs
+  const defs=document.createElementNS(ns,'defs');
+  const lg=document.createElementNS(ns,'linearGradient');
+  lg.setAttribute('id','popFade'); lg.setAttribute('x1','0'); lg.setAttribute('y1','0');
+  lg.setAttribute('x2','0'); lg.setAttribute('y2','1');
+  const s1=document.createElementNS(ns,'stop');
+  s1.setAttribute('offset','0%'); s1.setAttribute('stop-color','#06070F'); s1.setAttribute('stop-opacity','0');
+  const s2=document.createElementNS(ns,'stop');
+  s2.setAttribute('offset','100%'); s2.setAttribute('stop-color','#06070F'); s2.setAttribute('stop-opacity','0.6');
+  lg.appendChild(s1); lg.appendChild(s2); defs.appendChild(lg);
+  svg.appendChild(defs);
+
+  // ── PERIOD ROWS ──────────────────────────────────────
+  periods.forEach((p,i)=>{
+    const rowY    =ROWS_OFFSET+i*ROW_H;
+    const barY    =rowY+BAR_GAP;
+    const x1      =xOf(p.start);
+    const x2      =xOf(p.end);
+    const rawBarW =x2-x1;
+    const dispBarW=Math.max(rawBarW,3);
+
+    // Row separator (timeline only)
+    if(i>0){
+      const sep=el(ns,'line',{x1:0,y1:rowY,x2:W,y2:rowY,
+        stroke:'rgba(255,255,255,0.035)','stroke-width':1});
+      svg.appendChild(sep); mFadeOut.push(sep);
+    }
+
+    // Bar rect — morphs to full-height column
+    const rect=el(ns,'rect',{
+      x:x1,y:barY,width:dispBarW,height:BAR_H,
+      fill:p.color,'fill-opacity':0.14,
+      stroke:p.color,'stroke-width':1,'stroke-opacity':0.55,rx:1
+    });
+    rect.style.cursor='pointer';
+    rect.addEventListener('mouseenter',e=>{
+      if(morphT<0.3){rect.setAttribute('fill-opacity','0.32');showTip(e,p);}
+    });
+    rect.addEventListener('mousemove',moveTip);
+    rect.addEventListener('mouseleave',()=>{
+      rect.setAttribute('fill-opacity',lerp(0.14,0.28,morphT)); hideTip();
+    });
+    svg.appendChild(rect);
+
+    // Top edge accent (timeline only)
+    const topEdge=el(ns,'line',{x1,y1:barY,x2:x1+dispBarW,y2:barY,
+      stroke:p.color,'stroke-width':1.5,'stroke-opacity':0.8});
+    svg.appendChild(topEdge);
+
+    // ── Timeline text placement ──────────────────────
+    const estTextW=p.name.length*FONT_MAX*CHAR_RATIO;
+    const fitsInside=estTextW+48<=rawBarW;
+    let txNx,txNy,txNfs,txNanchor;
+    if(fitsInside){
+      txNfs=FONT_MAX; txNx=x1+rawBarW/2; txNy=barY+BAR_H/2+FONT_MAX*0.36; txNanchor='middle';
+    } else {
+      const avail=x1-PAD_L-16;
+      txNfs=Math.min(FONT_MAX,Math.max(avail/(p.name.length*CHAR_RATIO),12));
+      txNx=x1-10; txNy=barY+BAR_H/2+txNfs*0.36; txNanchor='end';
+    }
+
+    // ── Columns text placement ───────────────────────
+    const cxNfs=Math.max(Math.min((COL_W*0.86)/(p.name.length*CHAR_RATIO),18),9);
+    const cxNx =i*COL_W+COL_W/2;
+
+    const nameEl=el(ns,'text',{
+      x:txNx,y:txNy,'text-anchor':txNanchor,
+      'font-family':'Outfit,sans-serif','font-weight':800,
+      'font-size':txNfs,fill:p.color,'fill-opacity':0.92,'letter-spacing':0.5
+    });
+    nameEl.textContent=p.name;
+    svg.appendChild(nameEl);
+
+
+    // Vertical column divider (columns only)
+    const divider=el(ns,'line',{x1:i*COL_W,y1:0,x2:i*COL_W,y2:H,
+      stroke:'rgba(255,255,255,0.07)','stroke-width':1,opacity:0});
+    svg.appendChild(divider);
+
+    // Tech tags (timeline only)
+    const TECH_FS=9,TECH_LINE=13;
+    if(p.id===1){
+      const tx=x1+dispBarW+12;
+      p.tech.forEach((t,ti)=>{
+        const ty=barY+(BAR_H/2)+(ti-(p.tech.length-1)/2)*TECH_LINE+3;
+        const tEl=el(ns,'text',{x:tx,y:ty,'text-anchor':'start',
+          'font-family':'DM Mono,monospace','font-size':TECH_FS,
+          fill:p.color,'fill-opacity':0.48});
+        tEl.textContent=`${t.icon}  ${t.name}  ${fmtYear(t.year)}`;
+        svg.appendChild(tEl); mFadeOut.push(tEl);
+      });
+    } else {
+      const nameLeftEdge=fitsInside?x1:(txNx-estTextW);
+      const techRightX=nameLeftEdge-18;
+      p.tech.forEach((t,ti)=>{
+        const ty=barY+(BAR_H/2)+(ti-(p.tech.length-1)/2)*TECH_LINE+3;
+        const tEl=el(ns,'text',{x:techRightX,y:ty,'text-anchor':'end',
+          'font-family':'DM Mono,monospace','font-size':TECH_FS,
+          fill:p.color,'fill-opacity':0.48});
+        tEl.textContent=`${fmtYear(t.year)}  ${t.name}  ${t.icon}`;
+        svg.appendChild(tEl); mFadeOut.push(tEl);
+      });
+    }
+
+    mPeriods.push({
+      rect,topEdge,nameEl,divider,
+      tx:{rx:x1,ry:barY,rw:dispBarW,rh:BAR_H,rfo:0.14,
+          nx:txNx,ny:txNy,nfs:txNfs,nanchor:txNanchor},
+      cx:{rx:i*COL_W,ry:0,rw:COL_W,rh:H,rfo:0.28,
+          nx:cxNx,ny:cxNameY,nfs:cxNfs,nanchor:'middle'}
+    });
+  });
+
+  // ── YEAR AXIS (timeline only) ─────────────────────────
+  const axisY=ROWS_H+4;
+  const axLine=el(ns,'line',{x1:PAD_L,y1:axisY,x2:W-PAD_R,y2:axisY,
+    stroke:'rgba(255,255,255,0.18)','stroke-width':1});
+  svg.appendChild(axLine); mFadeOut.push(axLine);
+
+  [-1500,0,500,1000,1500].forEach(yr=>{
+    const x=xOf(yr);
+    const tick=el(ns,'line',{x1:x,y1:axisY,x2:x,y2:axisY+7,
+      stroke:'rgba(255,255,255,0.4)','stroke-width':1});
+    svg.appendChild(tick); mFadeOut.push(tick);
+    const t=el(ns,'text',{x,y:axisY+20,'text-anchor':'middle',
+      'font-family':'DM Mono,monospace','font-size':12,fill:'rgba(255,255,255,0.6)'});
+    t.textContent=fmtYear(yr); svg.appendChild(t); mFadeOut.push(t);
+  });
+
+  [{year:1800,drop:18},{year:1914,drop:34},{year:2026,drop:50}].forEach(({year,drop})=>{
+    const x=xOf(year);
+    const stem=el(ns,'line',{x1:x,y1:axisY,x2:x,y2:axisY+drop,
+      stroke:'rgba(255,255,255,0.28)','stroke-width':1});
+    svg.appendChild(stem); mFadeOut.push(stem);
+    const dot=el(ns,'circle',{cx:x,cy:axisY+drop,r:2,fill:'rgba(255,255,255,0.45)'});
+    svg.appendChild(dot); mFadeOut.push(dot);
+    const t=el(ns,'text',{x:x+6,y:axisY+drop+4,'text-anchor':'start',
+      'font-family':'DM Mono,monospace','font-size':12,fill:'rgba(255,255,255,0.6)'});
+    t.textContent=String(year); svg.appendChild(t); mFadeOut.push(t);
+  });
+
+  // ── POPULATION CHART log scale (timeline only) ────────
+  [100,200,500,1000,2000,5000,8100].forEach(v=>{
+    const yy=pyLog(v),isRound=v===1000||v===5000;
+    const gL=el(ns,'line',{x1:PAD_L,y1:yy,x2:W-PAD_R,y2:yy,
+      stroke:isRound?'rgba(255,255,255,0.08)':'rgba(255,255,255,0.04)',
+      'stroke-width':1,'stroke-dasharray':'3 6'});
+    svg.appendChild(gL); mFadeOut.push(gL);
+    const gT=el(ns,'text',{x:PAD_L-9,y:yy+4,'text-anchor':'end',
+      'font-family':'DM Mono,monospace','font-size':8,
+      fill:isRound?'rgba(255,255,255,0.25)':'rgba(255,255,255,0.15)'});
+    gT.textContent=v>=1000?`${v/1000}k`:String(v);
+    svg.appendChild(gT); mFadeOut.push(gT);
+    const tk=el(ns,'line',{x1:PAD_L-4,y1:yy,x2:PAD_L,y2:yy,
+      stroke:'rgba(255,255,255,0.2)','stroke-width':1});
+    svg.appendChild(tk); mFadeOut.push(tk);
+  });
+
+  const plEl=el(ns,'text',{x:PAD_L,y:popY0-6,
+    'font-family':'DM Mono,monospace','font-size':9,
+    fill:'rgba(255,255,255,0.2)','letter-spacing':0.12});
+  plEl.textContent='НАСЕЛЕНИЕ · МЛН · LOG';
+  svg.appendChild(plEl); mFadeOut.push(plEl);
+
+  // Colored area segments (non-overlapping)
+  const boundaryYears=[...new Set(periods.flatMap(p=>[p.start,p.end]))].sort((a,b)=>a-b);
+  for(let i=0;i<boundaryYears.length-1;i++){
+    const y1=boundaryYears[i],y2=boundaryYears[i+1],mid=(y1+y2)/2;
+    const active=periods.filter(p=>p.start<=mid&&p.end>=mid);
+    if(!active.length) continue;
+    const p=active[active.length-1];
+    const interp=yr=>{ const t=(yr-p.start)/(p.end-p.start); return p.pop.min+t*(p.pop.max-p.pop.min); };
+    const d=`M${xOf(y1)},${pyLog(interp(y1))} L${xOf(y2)},${pyLog(interp(y2))} L${xOf(y2)},${base} L${xOf(y1)},${base}Z`;
+    const area=el(ns,'path',{d,fill:p.color,'fill-opacity':0.45});
+    svg.appendChild(area); mFadeOut.push(area);
+  }
+
+  const fadeRect=el(ns,'rect',{x:PAD_L,y:popY0,width:TW,height:popH,fill:'url(#popFade)'});
+  svg.appendChild(fadeRect); mFadeOut.push(fadeRect);
+
+  // Stroke line
+  const rawPts=[];
+  periods.forEach(p=>{
+    rawPts.push({year:p.start,pop:p.pop.min});
+    rawPts.push({year:p.end,pop:p.pop.max});
+  });
+  rawPts.sort((a,b)=>a.year-b.year);
+  const pts=[];
+  rawPts.forEach(pt=>{
+    if(!pts.length||pts[pts.length-1].year!==pt.year) pts.push({...pt});
+    else pts[pts.length-1].pop=Math.max(pts[pts.length-1].pop,pt.pop);
+  });
+  if(pts.length>1){
+    let line=`M${xOf(pts[0].year)},${pyLog(pts[0].pop)}`;
+    for(let i=1;i<pts.length;i++) line+=` L${xOf(pts[i].year)},${pyLog(pts[i].pop)}`;
+    const stroke=el(ns,'path',{d:line,fill:'none',stroke:'rgba(255,255,255,0.55)','stroke-width':1.5});
+    svg.appendChild(stroke); mFadeOut.push(stroke);
+    const last=pts[pts.length-1];
+    const edot=el(ns,'circle',{cx:xOf(last.year),cy:pyLog(last.pop),r:3,fill:'#fff','fill-opacity':0.7});
+    svg.appendChild(edot); mFadeOut.push(edot);
+    const endT=el(ns,'text',{x:xOf(last.year)-8,y:pyLog(last.pop)-8,
+      'text-anchor':'end','font-family':'DM Mono,monospace','font-size':9,fill:'rgba(255,255,255,0.45)'});
+    endT.textContent='8 100 млн'; svg.appendChild(endT); mFadeOut.push(endT);
+  }
+  const baseline=el(ns,'line',{x1:PAD_L,y1:base,x2:W-PAD_R,y2:base,
+    stroke:'rgba(255,255,255,0.1)','stroke-width':1});
+  svg.appendChild(baseline); mFadeOut.push(baseline);
+
+  // ── TABLE (columns mode, 3 rows at top) ──────────────
+  // Row definitions: [field, label, rowY, rowH, fill-opacity, text-opacity]
+  const tableRows=[
+    {field:'institution',    label:'УЧЕБНЫЕ ЗАВЕДЕНИЯ', rowY:NAME_ZONE_H,                              rowH:INST_ROW_H, tfo:0.10, tto:0.78},
+    {field:'knowledge_status',label:'СТАТУС ЗНАНИЯ',   rowY:NAME_ZONE_H+INST_ROW_H,                  rowH:KNOW_ROW_H, tfo:0.07, tto:0.65},
+    {field:'population',     label:'НАСЕЛЕНИЕ',         rowY:NAME_ZONE_H+INST_ROW_H+KNOW_ROW_H,      rowH:POP_ROW_H,  tfo:0.14, tto:0.85},
+  ];
+
+  // Row horizontal borders
+  [NAME_ZONE_H, NAME_ZONE_H+INST_ROW_H, NAME_ZONE_H+INST_ROW_H+KNOW_ROW_H, TABLE_H].forEach((y,idx)=>{
+    const bLine=el(ns,'line',{x1:0,y1:y,x2:W,y2:y,
+      stroke:idx===0||idx===3?'rgba(255,255,255,0.15)':'rgba(255,255,255,0.07)',
+      'stroke-width':1,opacity:0});
+    svg.appendChild(bLine); mRowBorders.push(bLine);
+  });
+
+  // Row labels (left side of each row)
+  tableRows.forEach(row=>{
+    const lblFS=row.field==='population'?7:10;
+    const lblY=(row.field==='institution'||row.field==='knowledge_status')
+      ? row.rowY+(row.field==='institution'?INST_LABEL_H:KNOW_LABEL_H)-5
+      : row.rowY+ROW_LABEL_H-3;
+    const lbl=el(ns,'text',{
+      x:8, y:lblY,
+      'font-family':'DM Mono,monospace','font-size':lblFS,'letter-spacing':0.14,
+      fill:'rgba(255,255,255,1)','fill-opacity':0,'text-anchor':'start'
+    });
+    lbl.textContent=row.label;
+    svg.appendChild(lbl); mRowLabels.push(lbl);
+  });
+
+  // Table cells per period per row
+  periods.forEach((p,i)=>{
+    const cellX=i*COL_W;
+
+    tableRows.forEach(row=>{
+      const cellRect=el(ns,'rect',{
+        x:cellX, y:row.rowY, width:COL_W, height:row.rowH,
+        fill:p.color,'fill-opacity':0
+      });
+      svg.appendChild(cellRect);
+
+      const textEls=[];
+
+      if(row.field==='population'){
+        // Single line: population max
+        const val=p.pop.max>=1000?`${(p.pop.max/1000).toFixed(1)}k млн`:`${p.pop.max} млн`;
+        const tEl=el(ns,'text',{
+          x:cellX+COL_W/2, y:row.rowY+POP_ROW_H*0.62,
+          'text-anchor':'middle','font-family':'DM Mono,monospace','font-size':11,
+          fill:'#fff','fill-opacity':0,'letter-spacing':0.05
+        });
+        tEl.textContent=val;
+        svg.appendChild(tEl); textEls.push(tEl);
+      } else {
+        const isInst=row.field==='institution';
+        const isKnow=row.field==='knowledge_status';
+        const fs=isInst?INST_FS:isKnow?KNOW_FS:TEXT_FS;
+        const lh=isInst?INST_LINE_H:isKnow?KNOW_LINE_H:LINE_H;
+        const labelH=isInst?INST_LABEL_H:isKnow?KNOW_LABEL_H:ROW_LABEL_H;
+        const lines=wrapText(p.edu[row.field], innerW, fs, CR);
+        const startY=row.rowY+labelH+CELL_PAD_V+lh*0.78;
+        lines.forEach((line,li)=>{
+          const tEl=el(ns,'text',{
+            x:cellX+COL_PAD, y:startY+li*lh,
+            'text-anchor':'start','font-family':'DM Mono,monospace',
+            'font-size':fs,fill:'rgba(255,255,255,1)','fill-opacity':0
+          });
+          tEl.textContent=line;
+          svg.appendChild(tEl); textEls.push(tEl);
+        });
+      }
+
+      mColCells.push({rect:cellRect, textEls, tfo:row.tfo, tto:row.tto});
+    });
+  });
+
+  // Vertical column dividers for table (fade in with table)
+  for(let i=1;i<N;i++){
+    const dvl=el(ns,'line',{x1:i*COL_W,y1:NAME_ZONE_H,x2:i*COL_W,y2:TABLE_H,
+      stroke:'rgba(255,255,255,0.07)','stroke-width':1,opacity:0});
+    svg.appendChild(dvl); mRowBorders.push(dvl);
+  }
+
+  // ── TECH ICONS in columns view ────────────────────────
+  const TECH_ZONE_H=200;
+
+  function addTechIcon(t, cx, cy, cellW, cellH, color){
+    const ICON_FS=Math.min(cellW*0.8, cellH*0.72);
+    const charCount=[...t.icon].length;
+    const iconFS=charCount>1 ? ICON_FS/charCount*1.5 : ICON_FS;
+    const iconY=cy+iconFS*0.36;
+    const iconEl=el(ns,'text',{
+      x:cx, y:iconY, 'text-anchor':'middle',
+      'font-family':'DM Mono,monospace','font-size':iconFS,
+      fill:color,'fill-opacity':0
+    });
+    iconEl.textContent=t.icon;
+    svg.appendChild(iconEl);
+    mColTechs.push({el:iconEl, tfo:0.55});
+    const lblFS=Math.min((cellW*0.8)/(t.name.length*0.6), cellH*0.18);
+    const lblEl=el(ns,'text',{
+      x:cx, y:iconY+iconFS*0.14+lblFS*1.2,
+      'text-anchor':'middle','font-family':'DM Mono,monospace',
+      'font-size':lblFS, fill:'rgba(255,255,255,1)','fill-opacity':0,'letter-spacing':0.05
+    });
+    lblEl.textContent=t.name;
+    svg.appendChild(lblEl);
+    mColTechs.push({el:lblEl, tfo:0.38});
+  }
+
+  periods.forEach((p,i)=>{
+    const colX=i*COL_W;
+    if(p.tech.length<=1){
+      // Single tech: full column width, vertically centred
+      if(!p.tech[0]) return;
+      addTechIcon(p.tech[0], colX+COL_W/2, TABLE_H+TECH_ZONE_H/2, COL_W, TECH_ZONE_H, p.color);
+    } else {
+      // 2×2 grid (up to 4 slots, some may be empty)
+      const cellW=COL_W/2, cellH=TECH_ZONE_H/2;
+      for(let slot=0;slot<4;slot++){
+        const t=p.tech[slot];
+        if(!t) continue;
+        const col2=slot%2, row2=Math.floor(slot/2);
+        const cx=colX+col2*cellW+cellW/2;
+        const cy=TABLE_H+row2*cellH+cellH/2;
+        addTechIcon(t, cx, cy, cellW, cellH, p.color);
+      }
+    }
+  });
+
+  zone.appendChild(svg);
+  applyMorph(morphT);
+}
+
+// ── SLIDE 3: Pyramid → Diamond ───────────────────────
+function renderSlide3(){
+  const zone=document.getElementById('s3');
+  if(!zone)return;
+  zone.innerHTML='';
+  const W=zone.offsetWidth||window.innerWidth;
+  const H=zone.offsetHeight||window.innerHeight;
+  if(!W||!H)return;
+
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('width',W); svg.setAttribute('height',H);
+  svg.style.display='block';
+
+  const C1='#1B998B', C2='#06D6A0', CAI='#06D6A0';
+
+  // Layout
+  const HDR=Math.min(H*0.12,96);
+  const PAD_B=H*0.04;
+  const SHP_Y0=HDR+H*0.08;
+  const SHP_H=H-SHP_Y0-PAD_B;
+  const LH=SHP_H/3;
+  const HALF=W/2;
+  const MW=Math.min(HALF*0.80,380);
+  const LCX=HALF*0.5, RCX=HALF+HALF*0.5;
+
+  const Y=[SHP_Y0, SHP_Y0+LH, SHP_Y0+LH*2, SHP_Y0+SHP_H];
+  const AIY=Y[2];
+  // Diamond equator: centre of the full shape height
+  const EQ_Y=(Y[0]+Y[3])/2;
+  // Widths at layer seams via linear interpolation to equator
+  const D1=MW*(Y[1]-Y[0])/(EQ_Y-Y[0]); // width at Y[1]  (= 2/3 MW)
+  const D2=MW*(Y[3]-Y[2])/(Y[3]-EQ_Y); // width at Y[2]  (= 2/3 MW)
+
+  function e(tag,attrs,text){
+    const el=document.createElementNS(ns,tag);
+    Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,String(v)));
+    if(text!=null) el.textContent=text;
+    return el;
+  }
+  function pg(pts,col,fo,sw=1.5){
+    const p=e('polygon',{
+      points:pts.map(([x,y])=>`${x.toFixed(1)},${y.toFixed(1)}`).join(' '),
+      fill:col,'fill-opacity':fo,stroke:col,
+      'stroke-width':sw,'stroke-opacity':Math.min(fo*3,0.82),'stroke-linejoin':'round'
+    });
+    return p;
+  }
+  function txt(x,y,s,fs,fill,opts={}){
+    return e('text',{x,y,'text-anchor':opts.anchor||'middle',
+      'font-family':opts.mono?'DM Mono,monospace':'Outfit,sans-serif',
+      'font-size':fs,fill,'font-weight':opts.w||400,'letter-spacing':opts.ls||0},s);
+  }
+
+  // Defs: glow filter
+  const defs=e('defs',{});
+  const flt=e('filter',{id:'aiglow',x:'-50%',y:'-200%',width:'200%',height:'500%'});
+  flt.appendChild(e('feGaussianBlur',{in:'SourceGraphic',stdDeviation:'4',result:'b'}));
+  const fm=e('feMerge',{});
+  fm.appendChild(e('feMergeNode',{in:'b'}));
+  fm.appendChild(e('feMergeNode',{in:'SourceGraphic'}));
+  flt.appendChild(fm); defs.appendChild(flt);
+  svg.appendChild(defs);
+
+  // Title
+  svg.appendChild(txt(W/2,HDR*0.44,'ЭКОНОМИКА И ТРУД',
+    Math.min(H*0.047,40),'rgba(255,255,255,0.92)',{w:800,ls:'0.18em'}));
+  svg.appendChild(txt(W/2,HDR*0.78,'Трансформация структуры занятости под влиянием ИИ',
+    Math.min(H*0.017,13),'rgba(255,255,255,0.25)',{mono:true,ls:'0.04em'}));
+
+  // Section labels
+  svg.appendChild(txt(LCX,SHP_Y0-H*0.022,'СЕЙЧАС',10,C1,{mono:true,ls:'0.2em'}));
+  svg.appendChild(txt(RCX,SHP_Y0-H*0.022,'БУДУЩЕЕ',10,C2,{mono:true,ls:'0.2em'}));
+
+  // Center divider
+  svg.appendChild(e('line',{x1:HALF,y1:HDR*0.85,x2:HALF,y2:H,
+    stroke:'rgba(255,255,255,0.05)','stroke-width':1,'stroke-dasharray':'4 9'}));
+
+  // ── PYRAMID widths [tip, seam1, seam2(=AIY), base]
+  const PW=[MW*0.04, MW*0.38, MW*0.72, MW];
+
+  // Pyramid layers
+  svg.appendChild(pg([[LCX-PW[0]/2,Y[0]],[LCX+PW[0]/2,Y[0]],[LCX+PW[1]/2,Y[1]],[LCX-PW[1]/2,Y[1]]], C1, 0.32));
+  svg.appendChild(pg([[LCX-PW[1]/2,Y[1]],[LCX+PW[1]/2,Y[1]],[LCX+PW[2]/2,Y[2]],[LCX-PW[2]/2,Y[2]]], C1, 0.20));
+  svg.appendChild(pg([[LCX-PW[2]/2,Y[2]],[LCX+PW[2]/2,Y[2]],[LCX+PW[3]/2,Y[3]],[LCX-PW[3]/2,Y[3]]], C1, 0.12));
+
+  // ── DIAMOND: proper rhombus split into 3 layers ──
+  // Top layer: triangle (tip → D1)
+  svg.appendChild(pg([[RCX,Y[0]],[RCX+D1/2,Y[1]],[RCX-D1/2,Y[1]]], C2, 0.22));
+  // Middle layer: hexagon with sharp equator points
+  svg.appendChild(pg([
+    [RCX-D1/2,Y[1]], [RCX+D1/2,Y[1]],
+    [RCX+MW/2,EQ_Y],
+    [RCX+D2/2,Y[2]], [RCX-D2/2,Y[2]],
+    [RCX-MW/2,EQ_Y],
+  ], C2, 0.32));
+  // Bottom layer: triangle (D2 → tip)
+  svg.appendChild(pg([[RCX-D2/2,Y[2]],[RCX+D2/2,Y[2]],[RCX,Y[3]]], C2, 0.12));
+
+  // ── Layer labels ──
+  const lFS=Math.max(Math.min(LH*0.19,13),9);
+  [
+    {yi:0,name:'Топ-менеджеры'},
+    {yi:1,name:'Руководители'},
+    {yi:2,name:'Линейный персонал'},
+  ].forEach(({yi,name})=>{
+    const my=(Y[yi]+Y[yi+1])/2+lFS*0.36;
+    svg.appendChild(txt(LCX,my,name,lFS,'rgba(255,255,255,0.72)',{mono:true}));
+    svg.appendChild(txt(RCX,my,name,lFS,'rgba(255,255,255,0.72)',{mono:true}));
+  });
+
+  // ── AI line: glow + solid ──
+  svg.appendChild(e('line',{x1:0,y1:AIY,x2:W,y2:AIY,
+    stroke:CAI,'stroke-width':8,'stroke-opacity':0.10,filter:'url(#aiglow)'}));
+  svg.appendChild(e('line',{x1:0,y1:AIY,x2:W,y2:AIY,
+    stroke:CAI,'stroke-width':1.5,'stroke-opacity':0.85,'stroke-dasharray':'8 5'}));
+
+  // Intersection dots
+  [LCX-PW[2]/2, LCX+PW[2]/2, RCX-D2/2, RCX+D2/2].forEach(cx=>{
+    svg.appendChild(e('circle',{cx,cy:AIY,r:4,fill:CAI,'fill-opacity':0.95}));
+    svg.appendChild(e('circle',{cx,cy:AIY,r:8,fill:CAI,'fill-opacity':0.12}));
+  });
+
+  // AI label pill
+  const atxt='УРОВЕНЬ КОМПЕТЕНЦИЙ ИИ';
+  const alFS=8;
+  const alW=atxt.length*alFS*0.60+26;
+  const alH=19;
+  svg.appendChild(e('rect',{x:HALF-alW/2,y:AIY-alH/2,width:alW,height:alH,
+    fill:'#06070F',rx:3,stroke:CAI,'stroke-width':1,'stroke-opacity':0.55}));
+  svg.appendChild(txt(HALF,AIY+alFS*0.42,atxt,alFS,CAI,{mono:true,ls:'0.14em'}));
+
+  zone.appendChild(svg);
+}
+
+window.addEventListener('load',()=>{render();renderSlide3();});
+window.addEventListener('resize',()=>{render();renderSlide3();});
+</script>
+</body>
+</html>
